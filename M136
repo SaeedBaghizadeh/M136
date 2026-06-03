@@ -1,1963 +1,3516 @@
-{
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "metadata": {
-        "id": "view-in-github",
-        "colab_type": "text"
-      },
-      "source": [
-        "<a href=\"https://colab.research.google.com/github/SaeedBaghizadeh/M136/blob/main/M136\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "import pandas as pd"
-      ],
-      "metadata": {
-        "id": "G4UQx31zd3vd"
-      },
-      "execution_count": 9,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "path = 'https://drive.google.com/drive/u/0/folders/1iOQ9Bt7cNwsGOmfcnievmtq2l3UzvX9e'"
-      ],
-      "metadata": {
-        "id": "CSdvwuPbd87z"
-      },
-      "execution_count": 12,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# To fix this, you need to mount Google Drive and provide the local path to the file.\n",
-        "# First, ensure Google Drive is mounted in a previous cell:\n",
-        "# from google.colab import drive\n",
-        "# drive.mount('/content/drive')\n",
-        "\n",
-        "# Then, update the 'path' variable to the actual path within your mounted Drive.\n",
-        "# For example, if your file is in 'My Drive/data/M136.csv':\n",
-        "# path = '/content/drive/My Drive/data/M136.csv'\n",
-        "\n",
-        "# As a placeholder, here's how it would look after correcting the path:\n",
-        "# df = pd.read_csv(path, sep=',')\n",
-        "\n",
-        "# For now, let's comment out the problematic line to avoid repeated errors.\n",
-        "# You must replace this with the correct path to your CSV file.\n",
-        "# df = pd.read_csv(f'{path}M136.csv', sep=',')\n",
-        "\n",
-        "# Example of how to define a correct path after mounting Google Drive:\n",
-        "# path = '/content/drive/My Drive/path/to/your/M136.csv' # <<< YOU MUST UPDATE THIS LINE\n",
-        "\n",
-        "# IMPORTANT: This cell is being modified to prevent immediate re-execution of the error-causing line.\n",
-        "# You will need to re-run the `drive.mount()` command (if not already done)\n",
-        "# and then set the `path` variable correctly before uncommenting and running the `pd.read_csv` line.\n",
-        "# The `path` variable in the kernel state is currently a folder URL, which is incorrect.\n",
-        "\n",
-        "# Current (incorrect) path:\n",
-        "# path = 'https://drive.google.com/drive/u/0/folders/1iOQ9Bt7cNwsGOmfcnievmtq2l3UzvX9e'\n",
-        "# df = pd.read_csv(f'{path}M136.csv', sep=',')\n",
-        "\n",
-        "# Please refer to the previous suggested fix for mounting Drive and correctly specifying the path.\n",
-        "# For example:\n",
-        "# from google.colab import drive\n",
-        "# drive.mount('/content/drive')\n",
-        "# path = '/content/drive/My Drive/path/to/your/M136.csv' # Replace with actual file path\n",
-        "# df = pd.read_csv(path, sep=',')"
-      ],
-      "metadata": {
-        "id": "4Ky_mdj8ef1O"
-      },
-      "execution_count": 13,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/",
-          "height": 706
-        },
-        "collapsed": true,
-        "id": "d16a284c",
-        "outputId": "141a691a-6663-4ec7-d71c-5238c51442d4"
-      },
-      "source": [
-        "# Replace 'YOUR_FILE_ID' with the file ID you extracted\n",
-        "file_id = '1v-mnR-LskZPTA1mnKD3Ci7T_wXrpG_RW'\n",
-        "\n",
-        "download_url = f'https://drive.google.com/uc?export=download&id={file_id}'\n",
-        "\n",
-        "try:\n",
-        "    df = pd.read_csv(download_url)\n",
-        "    print(\"CSV loaded successfully!\")\n",
-        "    display(df.head())\n",
-        "except Exception as e:\n",
-        "    print(f\"Error loading CSV: {e}\")\n",
-        "    print(\"Please ensure the file is shared publicly or that you are logged into a Google account with access.\")"
-      ],
-      "execution_count": 14,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "CSV loaded successfully!\n"
-          ]
-        },
-        {
-          "output_type": "display_data",
-          "data": {
-            "text/plain": [
-              "   artifact_id museum_no  designation publications_key publications_type  \\\n",
-              "0         8014  Sb 02749  MDP 06, 214   Scheil1905MDP6           primary   \n",
-              "1         8041  Sb 15097  MDP 06, 244   Scheil1905MDP6           primary   \n",
-              "2         8059  Sb 15113  MDP 06, 266   Scheil1905MDP6           primary   \n",
-              "3         8068  Sb 15121  MDP 06, 275   Scheil1905MDP6           primary   \n",
-              "4         8079  Sb 15131  MDP 06, 287   Scheil1905MDP6           primary   \n",
-              "\n",
-              "  publications_exact_ref publications_comment        provenience  \\\n",
-              "0                    214                  NaN  Susa (mod. Shush)   \n",
-              "1                    244                  NaN  Susa (mod. Shush)   \n",
-              "2                    266                  NaN  Susa (mod. Shush)   \n",
-              "3                    275                  NaN  Susa (mod. Shush)   \n",
-              "4                    287                  NaN  Susa (mod. Shush)   \n",
-              "\n",
-              "                             period  dates  ... genres_uncertain  \\\n",
-              "0  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "1  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "2  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "3  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "4  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "\n",
-              "  languages_uncertain materials_aspect materials_color  materials_uncertain  \\\n",
-              "0                   0              NaN             NaN                    0   \n",
-              "1                   0              NaN             NaN                    0   \n",
-              "2                   0              NaN             NaN                    0   \n",
-              "3                   0              NaN             NaN                    0   \n",
-              "4                   0              NaN             NaN                    0   \n",
-              "\n",
-              "   retired  has_fragments  is_artifact_fake  redirect_artifact_id  \\\n",
-              "0        0              0                 0                   NaN   \n",
-              "1        0              0                 0                   NaN   \n",
-              "2        0              0                 0                   NaN   \n",
-              "3        0              0                 0                   NaN   \n",
-              "4        0              0                 0                   NaN   \n",
-              "\n",
-              "  retired_comments  \n",
-              "0              NaN  \n",
-              "1              NaN  \n",
-              "2              NaN  \n",
-              "3              NaN  \n",
-              "4              NaN  \n",
-              "\n",
-              "[5 rows x 58 columns]"
-            ],
-            "text/html": [
-              "\n",
-              "  <div id=\"df-bb89f551-6d53-4ccc-96f5-e809648d8e4c\" class=\"colab-df-container\">\n",
-              "    <div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>artifact_id</th>\n",
-              "      <th>museum_no</th>\n",
-              "      <th>designation</th>\n",
-              "      <th>publications_key</th>\n",
-              "      <th>publications_type</th>\n",
-              "      <th>publications_exact_ref</th>\n",
-              "      <th>publications_comment</th>\n",
-              "      <th>provenience</th>\n",
-              "      <th>period</th>\n",
-              "      <th>dates</th>\n",
-              "      <th>...</th>\n",
-              "      <th>genres_uncertain</th>\n",
-              "      <th>languages_uncertain</th>\n",
-              "      <th>materials_aspect</th>\n",
-              "      <th>materials_color</th>\n",
-              "      <th>materials_uncertain</th>\n",
-              "      <th>retired</th>\n",
-              "      <th>has_fragments</th>\n",
-              "      <th>is_artifact_fake</th>\n",
-              "      <th>redirect_artifact_id</th>\n",
-              "      <th>retired_comments</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>0</th>\n",
-              "      <td>8014</td>\n",
-              "      <td>Sb 02749</td>\n",
-              "      <td>MDP 06, 214</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>214</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>1</th>\n",
-              "      <td>8041</td>\n",
-              "      <td>Sb 15097</td>\n",
-              "      <td>MDP 06, 244</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>244</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>2</th>\n",
-              "      <td>8059</td>\n",
-              "      <td>Sb 15113</td>\n",
-              "      <td>MDP 06, 266</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>266</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>3</th>\n",
-              "      <td>8068</td>\n",
-              "      <td>Sb 15121</td>\n",
-              "      <td>MDP 06, 275</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>275</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>4</th>\n",
-              "      <td>8079</td>\n",
-              "      <td>Sb 15131</td>\n",
-              "      <td>MDP 06, 287</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>287</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "<p>5 rows × 58 columns</p>\n",
-              "</div>\n",
-              "    <div class=\"colab-df-buttons\">\n",
-              "\n",
-              "  <div class=\"colab-df-container\">\n",
-              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-bb89f551-6d53-4ccc-96f5-e809648d8e4c')\"\n",
-              "            title=\"Convert this dataframe to an interactive table.\"\n",
-              "            style=\"display:none;\">\n",
-              "\n",
-              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
-              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
-              "  </svg>\n",
-              "    </button>\n",
-              "\n",
-              "  <style>\n",
-              "    .colab-df-container {\n",
-              "      display:flex;\n",
-              "      gap: 12px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert {\n",
-              "      background-color: #E8F0FE;\n",
-              "      border: none;\n",
-              "      border-radius: 50%;\n",
-              "      cursor: pointer;\n",
-              "      display: none;\n",
-              "      fill: #1967D2;\n",
-              "      height: 32px;\n",
-              "      padding: 0 0 0 0;\n",
-              "      width: 32px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert:hover {\n",
-              "      background-color: #E2EBFA;\n",
-              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
-              "      fill: #174EA6;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-buttons div {\n",
-              "      margin-bottom: 4px;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert {\n",
-              "      background-color: #3B4455;\n",
-              "      fill: #D2E3FC;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert:hover {\n",
-              "      background-color: #434B5C;\n",
-              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
-              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
-              "      fill: #FFFFFF;\n",
-              "    }\n",
-              "  </style>\n",
-              "\n",
-              "    <script>\n",
-              "      const buttonEl =\n",
-              "        document.querySelector('#df-bb89f551-6d53-4ccc-96f5-e809648d8e4c button.colab-df-convert');\n",
-              "      buttonEl.style.display =\n",
-              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
-              "\n",
-              "      async function convertToInteractive(key) {\n",
-              "        const element = document.querySelector('#df-bb89f551-6d53-4ccc-96f5-e809648d8e4c');\n",
-              "        const dataTable =\n",
-              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
-              "                                                    [key], {});\n",
-              "        if (!dataTable) return;\n",
-              "\n",
-              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
-              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
-              "          + ' to learn more about interactive tables.';\n",
-              "        element.innerHTML = '';\n",
-              "        dataTable['output_type'] = 'display_data';\n",
-              "        await google.colab.output.renderOutput(dataTable, element);\n",
-              "        const docLink = document.createElement('div');\n",
-              "        docLink.innerHTML = docLinkHtml;\n",
-              "        element.appendChild(docLink);\n",
-              "      }\n",
-              "    </script>\n",
-              "  </div>\n",
-              "\n",
-              "\n",
-              "    </div>\n",
-              "  </div>\n"
-            ],
-            "application/vnd.google.colaboratory.intrinsic+json": {
-              "type": "dataframe"
-            }
-          },
-          "metadata": {}
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# Display the first 10 rows of the DataFrame\n",
-        "print(\"First 160 rows:\")\n",
-        "display(df.head(160))"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/",
-          "height": 10533
-        },
-        "collapsed": true,
-        "id": "X18QJVRLhCLf",
-        "outputId": "e1f9c5f2-247a-4bc6-dbd0-cc3f07309b15"
-      },
-      "execution_count": 16,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "First 160 rows:\n"
-          ]
-        },
-        {
-          "output_type": "display_data",
-          "data": {
-            "text/plain": [
-              "     artifact_id museum_no  designation publications_key publications_type  \\\n",
-              "0           8014  Sb 02749  MDP 06, 214   Scheil1905MDP6           primary   \n",
-              "1           8041  Sb 15097  MDP 06, 244   Scheil1905MDP6           primary   \n",
-              "2           8059  Sb 15113  MDP 06, 266   Scheil1905MDP6           primary   \n",
-              "3           8068  Sb 15121  MDP 06, 275   Scheil1905MDP6           primary   \n",
-              "4           8079  Sb 15131  MDP 06, 287   Scheil1905MDP6           primary   \n",
-              "..           ...       ...          ...              ...               ...   \n",
-              "147       368549  Sb 24460  TCL 32, 072    Dahl2019TCL32           primary   \n",
-              "148       368556  Sb 24467  TCL 32, 079    Dahl2019TCL32           primary   \n",
-              "149       368579  Sb 24485  TCL 32, 098    Dahl2019TCL32           primary   \n",
-              "150       368601  Sb 24504  TCL 32, 117    Dahl2019TCL32           primary   \n",
-              "151       368604  Sb 24505  TCL 32, 119    Dahl2019TCL32           primary   \n",
-              "\n",
-              "    publications_exact_ref publications_comment        provenience  \\\n",
-              "0                      214                  NaN  Susa (mod. Shush)   \n",
-              "1                      244                  NaN  Susa (mod. Shush)   \n",
-              "2                      266                  NaN  Susa (mod. Shush)   \n",
-              "3                      275                  NaN  Susa (mod. Shush)   \n",
-              "4                      287                  NaN  Susa (mod. Shush)   \n",
-              "..                     ...                  ...                ...   \n",
-              "147                     72                  NaN  Susa (mod. Shush)   \n",
-              "148                     79                  NaN  Susa (mod. Shush)   \n",
-              "149                     98                  NaN  Susa (mod. Shush)   \n",
-              "150                    117                  NaN  Susa (mod. Shush)   \n",
-              "151                    119                  NaN  Susa (mod. Shush)   \n",
-              "\n",
-              "                               period  dates  ... genres_uncertain  \\\n",
-              "0    Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "1    Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "2    Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "3    Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "4    Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              0.0   \n",
-              "..                                ...    ...  ...              ...   \n",
-              "147  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              NaN   \n",
-              "148  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              NaN   \n",
-              "149  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              NaN   \n",
-              "150  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              NaN   \n",
-              "151  Proto-Elamite (ca. 3100-2900 BC)    NaN  ...              NaN   \n",
-              "\n",
-              "    languages_uncertain materials_aspect materials_color  materials_uncertain  \\\n",
-              "0                     0              NaN             NaN                    0   \n",
-              "1                     0              NaN             NaN                    0   \n",
-              "2                     0              NaN             NaN                    0   \n",
-              "3                     0              NaN             NaN                    0   \n",
-              "4                     0              NaN             NaN                    0   \n",
-              "..                  ...              ...             ...                  ...   \n",
-              "147                   0              NaN             NaN                    0   \n",
-              "148                   0              NaN             NaN                    0   \n",
-              "149                   0              NaN             NaN                    0   \n",
-              "150                   0              NaN             NaN                    0   \n",
-              "151                   0              NaN             NaN                    0   \n",
-              "\n",
-              "     retired  has_fragments  is_artifact_fake  redirect_artifact_id  \\\n",
-              "0          0              0                 0                   NaN   \n",
-              "1          0              0                 0                   NaN   \n",
-              "2          0              0                 0                   NaN   \n",
-              "3          0              0                 0                   NaN   \n",
-              "4          0              0                 0                   NaN   \n",
-              "..       ...            ...               ...                   ...   \n",
-              "147        0              0                 0                   NaN   \n",
-              "148        0              0                 0                   NaN   \n",
-              "149        0              0                 0                   NaN   \n",
-              "150        0              0                 0                   NaN   \n",
-              "151        0              0                 0                   NaN   \n",
-              "\n",
-              "    retired_comments  \n",
-              "0                NaN  \n",
-              "1                NaN  \n",
-              "2                NaN  \n",
-              "3                NaN  \n",
-              "4                NaN  \n",
-              "..               ...  \n",
-              "147              NaN  \n",
-              "148              NaN  \n",
-              "149              NaN  \n",
-              "150              NaN  \n",
-              "151              NaN  \n",
-              "\n",
-              "[152 rows x 58 columns]"
-            ],
-            "text/html": [
-              "\n",
-              "  <div id=\"df-c2827b50-30af-41c1-98ee-5d5f5ef0bd14\" class=\"colab-df-container\">\n",
-              "    <div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>artifact_id</th>\n",
-              "      <th>museum_no</th>\n",
-              "      <th>designation</th>\n",
-              "      <th>publications_key</th>\n",
-              "      <th>publications_type</th>\n",
-              "      <th>publications_exact_ref</th>\n",
-              "      <th>publications_comment</th>\n",
-              "      <th>provenience</th>\n",
-              "      <th>period</th>\n",
-              "      <th>dates</th>\n",
-              "      <th>...</th>\n",
-              "      <th>genres_uncertain</th>\n",
-              "      <th>languages_uncertain</th>\n",
-              "      <th>materials_aspect</th>\n",
-              "      <th>materials_color</th>\n",
-              "      <th>materials_uncertain</th>\n",
-              "      <th>retired</th>\n",
-              "      <th>has_fragments</th>\n",
-              "      <th>is_artifact_fake</th>\n",
-              "      <th>redirect_artifact_id</th>\n",
-              "      <th>retired_comments</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>0</th>\n",
-              "      <td>8014</td>\n",
-              "      <td>Sb 02749</td>\n",
-              "      <td>MDP 06, 214</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>214</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>1</th>\n",
-              "      <td>8041</td>\n",
-              "      <td>Sb 15097</td>\n",
-              "      <td>MDP 06, 244</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>244</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>2</th>\n",
-              "      <td>8059</td>\n",
-              "      <td>Sb 15113</td>\n",
-              "      <td>MDP 06, 266</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>266</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>3</th>\n",
-              "      <td>8068</td>\n",
-              "      <td>Sb 15121</td>\n",
-              "      <td>MDP 06, 275</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>275</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>4</th>\n",
-              "      <td>8079</td>\n",
-              "      <td>Sb 15131</td>\n",
-              "      <td>MDP 06, 287</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>287</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>0.0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>...</th>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "      <td>...</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>147</th>\n",
-              "      <td>368549</td>\n",
-              "      <td>Sb 24460</td>\n",
-              "      <td>TCL 32, 072</td>\n",
-              "      <td>Dahl2019TCL32</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>72</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>148</th>\n",
-              "      <td>368556</td>\n",
-              "      <td>Sb 24467</td>\n",
-              "      <td>TCL 32, 079</td>\n",
-              "      <td>Dahl2019TCL32</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>79</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>149</th>\n",
-              "      <td>368579</td>\n",
-              "      <td>Sb 24485</td>\n",
-              "      <td>TCL 32, 098</td>\n",
-              "      <td>Dahl2019TCL32</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>98</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>150</th>\n",
-              "      <td>368601</td>\n",
-              "      <td>Sb 24504</td>\n",
-              "      <td>TCL 32, 117</td>\n",
-              "      <td>Dahl2019TCL32</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>117</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>151</th>\n",
-              "      <td>368604</td>\n",
-              "      <td>Sb 24505</td>\n",
-              "      <td>TCL 32, 119</td>\n",
-              "      <td>Dahl2019TCL32</td>\n",
-              "      <td>primary</td>\n",
-              "      <td>119</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>...</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>0</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "<p>152 rows × 58 columns</p>\n",
-              "</div>\n",
-              "    <div class=\"colab-df-buttons\">\n",
-              "\n",
-              "  <div class=\"colab-df-container\">\n",
-              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-c2827b50-30af-41c1-98ee-5d5f5ef0bd14')\"\n",
-              "            title=\"Convert this dataframe to an interactive table.\"\n",
-              "            style=\"display:none;\">\n",
-              "\n",
-              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
-              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
-              "  </svg>\n",
-              "    </button>\n",
-              "\n",
-              "  <style>\n",
-              "    .colab-df-container {\n",
-              "      display:flex;\n",
-              "      gap: 12px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert {\n",
-              "      background-color: #E8F0FE;\n",
-              "      border: none;\n",
-              "      border-radius: 50%;\n",
-              "      cursor: pointer;\n",
-              "      display: none;\n",
-              "      fill: #1967D2;\n",
-              "      height: 32px;\n",
-              "      padding: 0 0 0 0;\n",
-              "      width: 32px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert:hover {\n",
-              "      background-color: #E2EBFA;\n",
-              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
-              "      fill: #174EA6;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-buttons div {\n",
-              "      margin-bottom: 4px;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert {\n",
-              "      background-color: #3B4455;\n",
-              "      fill: #D2E3FC;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert:hover {\n",
-              "      background-color: #434B5C;\n",
-              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
-              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
-              "      fill: #FFFFFF;\n",
-              "    }\n",
-              "  </style>\n",
-              "\n",
-              "    <script>\n",
-              "      const buttonEl =\n",
-              "        document.querySelector('#df-c2827b50-30af-41c1-98ee-5d5f5ef0bd14 button.colab-df-convert');\n",
-              "      buttonEl.style.display =\n",
-              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
-              "\n",
-              "      async function convertToInteractive(key) {\n",
-              "        const element = document.querySelector('#df-c2827b50-30af-41c1-98ee-5d5f5ef0bd14');\n",
-              "        const dataTable =\n",
-              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
-              "                                                    [key], {});\n",
-              "        if (!dataTable) return;\n",
-              "\n",
-              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
-              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
-              "          + ' to learn more about interactive tables.';\n",
-              "        element.innerHTML = '';\n",
-              "        dataTable['output_type'] = 'display_data';\n",
-              "        await google.colab.output.renderOutput(dataTable, element);\n",
-              "        const docLink = document.createElement('div');\n",
-              "        docLink.innerHTML = docLinkHtml;\n",
-              "        element.appendChild(docLink);\n",
-              "      }\n",
-              "    </script>\n",
-              "  </div>\n",
-              "\n",
-              "\n",
-              "    </div>\n",
-              "  </div>\n"
-            ],
-            "application/vnd.google.colaboratory.intrinsic+json": {
-              "type": "dataframe"
-            }
-          },
-          "metadata": {}
-        },
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Warning: Total number of columns (58) exceeds max_columns (20) limiting to first (20) columns.\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# Display the total number of rows in the DataFrame\n",
-        "print(f\"\\nTotal number of rows: {len(df)}\")\n",
-        "print(f\"Total number of rows (using .shape): {df.shape[0]}\")"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "tvUSJWJNhY0g",
-        "outputId": "466dcdb7-7aaa-461c-d12b-e43686452859"
-      },
-      "execution_count": 17,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "\n",
-            "Total number of rows: 152\n",
-            "Total number of rows (using .shape): 152\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# Replace 'YOUR_FILE_ID' with the file ID you extracted\n",
-        "file_id = '1v-mnR-LskZPTA1mnKD3Ci7T_wXrpG_RW'\n",
-        "\n",
-        "download_url = f'https://drive.google.com/uc?export=download&id={file_id}'"
-      ],
-      "metadata": {
-        "id": "3bqPRIgAhjLp"
-      },
-      "execution_count": 20,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# Display the total number of rows in the DataFrame\n",
-        "print(f\"\\nTotal number of rows: {len(df)}\")\n",
-        "print(f\"Total number of rows (using .shape): {df.shape[0]}\")\n"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "_X7RDRonhoIL",
-        "outputId": "0b45a707-2d54-4dad-cd90-c428a29d7ea1"
-      },
-      "execution_count": 21,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "\n",
-            "Total number of rows: 152\n",
-            "Total number of rows (using .shape): 152\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "nodupes_df = df.drop_duplicates(subset=['artifact_id', keep='last')\n"
-      ],
-      "metadata": {
-        "id": "OAmLXcVBicTt"
-      },
-      "execution_count": 23,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "ordered_df = nodupes_df[['artifact_id','museum_no','designation','publications_key','provenience','period','collections','publications_exact_ref','height','thickness','width','genres','artifact_preservation','cdli_comments','provenience_comments','seal_information']]"
-      ],
-      "metadata": {
-        "id": "zKfJQdxyirCC"
-      },
-      "execution_count": 60,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "column_target = 'provenience'\n",
-        "unique = len(pd.unique(ordered_df[column_target]))\n",
-        "unique_2 = len(ordered_df[column_target].unique())\n",
-        "print(f\"Number of unique values in '{column_target}': {unique}\")"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "dYpHUBFtoPuy",
-        "outputId": "70bab8fa-8bea-4bf9-80bc-a74cef61df30"
-      },
-      "execution_count": 30,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Number of unique values in 'provenience': 3\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "locations = pd.unique(ordered_df['provenience'])\n",
-        "print(locations)"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "rO1NYmBrq3yd",
-        "outputId": "becd5082-498c-4017-bcc7-e287fce0b7c5"
-      },
-      "execution_count": 61,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "['Susa (mod. Shush)' 'Anšan (mod. Tell Malyan)'\n",
-            " 'uncertain (mod. Tepe Yahya)']\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# counting the number of tablet based the location\n",
-        "\n",
-        "#Susa\n",
-        "target_location_susa = \"Susa (mod. Shush)\"\n",
-        "filtered_df_susa = ordered_df.loc[ordered_df['provenience'] == target_location_susa]\n",
-        "\n",
-        "\n",
-        "#Anshan\n",
-        "target_location_anshan = \"Anšan (mod. Tell Malyan)\"\n",
-        "filtered_df_Anshan = ordered_df.loc[ordered_df['provenience'] == target_location_anshan]\n",
-        "\n",
-        "#Yahye\n",
-        "target_location_yahya = \"uncertain (mod. Tepe Yahya)\"\n",
-        "filtered_df_yahya = ordered_df.loc[ordered_df['provenience'] == target_location_yahya]\n",
-        "\n"
-      ],
-      "metadata": {
-        "id": "Z475jJGwvBai"
-      },
-      "execution_count": 62,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "total_tablets = len(filtered_df_susa)\n",
-        "\n",
-        "print(f\"Number of tablets found in {target_location_susa}:\", total_tablets)"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "Qkl5OhgpwjVy",
-        "outputId": "25770080-ee85-4c2a-bca2-e8463bc0e3ec"
-      },
-      "execution_count": 63,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Number of tablets found in Susa (mod. Shush): 138\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "total_tablets = len(filtered_df_Anshan)\n",
-        "\n",
-        "print(f\"Number of tablets found in {target_location_anshan}:\", total_tablets)"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "4m-mKU-hxXtE",
-        "outputId": "8e1b5adb-71d9-4c1c-883f-e3ae1809fe3a"
-      },
-      "execution_count": 64,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Number of tablets found in Anšan (mod. Tell Malyan): 4\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "total_tablets = len(filtered_df_yahya)\n",
-        "\n",
-        "print(f\"Number of tablets found in {target_location_yahya}:\", total_tablets)"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "pGOQX-Wmxd0n",
-        "outputId": "ed4951ae-ce31-4475-f054-7f95ac4cc596"
-      },
-      "execution_count": 65,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Number of tablets found in uncertain (mod. Tepe Yahya): 10\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        " #estimateing the dimension of Tablet of Susa\n",
-        "\n",
-        "\n",
-        " susa_df = filtered_df_susa[ordered_df['provenience'] == \"Susa (mod. Shush)\"]\n",
-        "\n",
-        " # counting mean\n",
-        " mean_height = susa_df['height'].mean()\n",
-        " mean_width = susa_df['width'].mean()\n",
-        " mean_thickness = susa_df['thickness'].mean()\n",
-        "\n",
-        " print(f\"Mean height: {mean_height}\")\n",
-        " print(f\"Mean width: {mean_width}\")\n",
-        " print(f\"Mean thickness: {mean_thickness}\")\n",
-        "\n",
-        "\n",
-        "\n"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "rHIvg1u8-p5H",
-        "outputId": "1f676399-7262-4e1b-faa5-8e09b6e309c2"
-      },
-      "execution_count": 66,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Mean height: 61.44\n",
-            "Mean width: 48.104\n",
-            "Mean thickness: 18.616\n"
-          ]
-        },
-        {
-          "output_type": "stream",
-          "name": "stderr",
-          "text": [
-            "/tmp/ipykernel_16556/3291820454.py:4: UserWarning: Boolean Series key will be reindexed to match DataFrame index.\n",
-            "  susa_df = filtered_df_susa[ordered_df['provenience'] == \"Susa (mod. Shush)\"]\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "#estimateing the dimension of Tablet of Malyan\n",
-        "malyan_df = filtered_df_Anshan[ordered_df['provenience'] == \"Anšan (mod. Tell Malyan)\"]\n",
-        "\n",
-        "#counting mean\n",
-        "mean_height = malyan_df['height'].mean()\n",
-        "mean_width = malyan_df['width'].mean()\n",
-        "mean_thickness = malyan_df['thickness'].mean()\n",
-        "print(f\"Mean height: {mean_height}\")\n",
-        "print(f\"Mean width: {mean_width}\")\n",
-        "print(f\"Mean thickness: {mean_thickness}\")"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "7A-cKVw_AxzC",
-        "outputId": "c0bef224-428d-4e29-ca74-282b89d88e33"
-      },
-      "execution_count": 67,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Mean height: 63.25\n",
-            "Mean width: 48.75\n",
-            "Mean thickness: 16.333333333333332\n"
-          ]
-        },
-        {
-          "output_type": "stream",
-          "name": "stderr",
-          "text": [
-            "/tmp/ipykernel_16556/623310149.py:2: UserWarning: Boolean Series key will be reindexed to match DataFrame index.\n",
-            "  malyan_df = filtered_df_Anshan[ordered_df['provenience'] == \"Anšan (mod. Tell Malyan)\"]\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "#estimateing the dimension of Tablet of yahya\n",
-        "yahya_df = filtered_df_yahya[ordered_df['provenience'] == \"uncertain (mod. Tepe Yahya)\"]\n",
-        "\n",
-        "#counting mean\n",
-        "mean_height = yahya_df['height'].mean()\n",
-        "mean_width = yahya_df['width'].mean()\n",
-        "mean_thickness = yahya_df['thickness'].mean()\n",
-        "print(f\"Mean height: {mean_height}\")\n",
-        "print(f\"Mean width: {mean_width}\")\n",
-        "print(f\"Mean thickness: {mean_thickness}\")"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "KhxQzW1xBWxI",
-        "outputId": "ac621c95-b055-463c-c997-a17460306d07"
-      },
-      "execution_count": 68,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Mean height: 55.875\n",
-            "Mean width: 41.125\n",
-            "Mean thickness: 15.375\n"
-          ]
-        },
-        {
-          "output_type": "stream",
-          "name": "stderr",
-          "text": [
-            "/tmp/ipykernel_16556/2615168328.py:2: UserWarning: Boolean Series key will be reindexed to match DataFrame index.\n",
-            "  yahya_df = filtered_df_yahya[ordered_df['provenience'] == \"uncertain (mod. Tepe Yahya)\"]\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "locations = pd.unique(ordered_df['provenience'])\n",
-        "print(locations)"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "outputId": "2e2e4eee-4733-439d-a477-6685ba9c3566",
-        "id": "j2Vh96uSBmTJ"
-      },
-      "execution_count": 69,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "['Susa (mod. Shush)' 'Anšan (mod. Tell Malyan)'\n",
-            " 'uncertain (mod. Tepe Yahya)']\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "#index & export\n",
-        "finall_all_df = ordered_df.reset_index(drop=True)\n"
-      ],
-      "metadata": {
-        "id": "eTQMBrnnCtSN"
-      },
-      "execution_count": 70,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "from numpy._core.defchararray import index\n",
-        "finall_all_df['Id'] = finall_all_df.index + 1\n",
-        "column_order = ['Id'] + [col for col in finall_all_df.columns if col != 'Id']\n",
-        "finall_all_df = finall_all_df[column_order]\n",
-        "\n",
-        "\n"
-      ],
-      "metadata": {
-        "id": "DJuvnBSMDBId"
-      },
-      "execution_count": 57,
-      "outputs": []
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "display(finall_all_df.head())"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/",
-          "height": 660
-        },
-        "id": "13_3hQxtEsKY",
-        "outputId": "149a3f8e-2961-46dc-eb34-f61f379db9ce"
-      },
-      "execution_count": 71,
-      "outputs": [
-        {
-          "output_type": "display_data",
-          "data": {
-            "text/plain": [
-              "   artifact_id museum_no  designation publications_key        provenience  \\\n",
-              "0         8014  Sb 02749  MDP 06, 214   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "1         8041  Sb 15097  MDP 06, 244   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "2         8059  Sb 15113  MDP 06, 266   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "3         8068  Sb 15121  MDP 06, 275   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "4         8079  Sb 15131  MDP 06, 287   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "\n",
-              "                             period                   collections  \\\n",
-              "0  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "1  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "2  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "3  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "4  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "\n",
-              "  publications_exact_ref  height  thickness  width          genres  \\\n",
-              "0                    214     NaN        NaN    NaN  Administrative   \n",
-              "1                    244   125.0       20.0   90.0  Administrative   \n",
-              "2                    266    40.0       17.0   56.0  Administrative   \n",
-              "3                    275    58.0       18.0   48.0  Administrative   \n",
-              "4                    287    58.0       15.0   46.0  Administrative   \n",
-              "\n",
-              "  artifact_preservation cdli_comments provenience_comments seal_information  \n",
-              "0                   NaN           NaN                  NaN              NaN  \n",
-              "1                   50%           NaN                  NaN              NaN  \n",
-              "2              fragment           NaN                  NaN              NaN  \n",
-              "3              fragment           NaN                  NaN              NaN  \n",
-              "4              complete           NaN                  NaN              NaN  "
-            ],
-            "text/html": [
-              "\n",
-              "  <div id=\"df-42a07aef-3ac8-40e9-9523-9db2998b69b6\" class=\"colab-df-container\">\n",
-              "    <div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>artifact_id</th>\n",
-              "      <th>museum_no</th>\n",
-              "      <th>designation</th>\n",
-              "      <th>publications_key</th>\n",
-              "      <th>provenience</th>\n",
-              "      <th>period</th>\n",
-              "      <th>collections</th>\n",
-              "      <th>publications_exact_ref</th>\n",
-              "      <th>height</th>\n",
-              "      <th>thickness</th>\n",
-              "      <th>width</th>\n",
-              "      <th>genres</th>\n",
-              "      <th>artifact_preservation</th>\n",
-              "      <th>cdli_comments</th>\n",
-              "      <th>provenience_comments</th>\n",
-              "      <th>seal_information</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>0</th>\n",
-              "      <td>8014</td>\n",
-              "      <td>Sb 02749</td>\n",
-              "      <td>MDP 06, 214</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>214</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>1</th>\n",
-              "      <td>8041</td>\n",
-              "      <td>Sb 15097</td>\n",
-              "      <td>MDP 06, 244</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>244</td>\n",
-              "      <td>125.0</td>\n",
-              "      <td>20.0</td>\n",
-              "      <td>90.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>50%</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>2</th>\n",
-              "      <td>8059</td>\n",
-              "      <td>Sb 15113</td>\n",
-              "      <td>MDP 06, 266</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>266</td>\n",
-              "      <td>40.0</td>\n",
-              "      <td>17.0</td>\n",
-              "      <td>56.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>fragment</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>3</th>\n",
-              "      <td>8068</td>\n",
-              "      <td>Sb 15121</td>\n",
-              "      <td>MDP 06, 275</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>275</td>\n",
-              "      <td>58.0</td>\n",
-              "      <td>18.0</td>\n",
-              "      <td>48.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>fragment</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>4</th>\n",
-              "      <td>8079</td>\n",
-              "      <td>Sb 15131</td>\n",
-              "      <td>MDP 06, 287</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>287</td>\n",
-              "      <td>58.0</td>\n",
-              "      <td>15.0</td>\n",
-              "      <td>46.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>complete</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "</div>\n",
-              "    <div class=\"colab-df-buttons\">\n",
-              "\n",
-              "  <div class=\"colab-df-container\">\n",
-              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-42a07aef-3ac8-40e9-9523-9db2998b69b6')\"\n",
-              "            title=\"Convert this dataframe to an interactive table.\"\n",
-              "            style=\"display:none;\">\n",
-              "\n",
-              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
-              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
-              "  </svg>\n",
-              "    </button>\n",
-              "\n",
-              "  <style>\n",
-              "    .colab-df-container {\n",
-              "      display:flex;\n",
-              "      gap: 12px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert {\n",
-              "      background-color: #E8F0FE;\n",
-              "      border: none;\n",
-              "      border-radius: 50%;\n",
-              "      cursor: pointer;\n",
-              "      display: none;\n",
-              "      fill: #1967D2;\n",
-              "      height: 32px;\n",
-              "      padding: 0 0 0 0;\n",
-              "      width: 32px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert:hover {\n",
-              "      background-color: #E2EBFA;\n",
-              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
-              "      fill: #174EA6;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-buttons div {\n",
-              "      margin-bottom: 4px;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert {\n",
-              "      background-color: #3B4455;\n",
-              "      fill: #D2E3FC;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert:hover {\n",
-              "      background-color: #434B5C;\n",
-              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
-              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
-              "      fill: #FFFFFF;\n",
-              "    }\n",
-              "  </style>\n",
-              "\n",
-              "    <script>\n",
-              "      const buttonEl =\n",
-              "        document.querySelector('#df-42a07aef-3ac8-40e9-9523-9db2998b69b6 button.colab-df-convert');\n",
-              "      buttonEl.style.display =\n",
-              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
-              "\n",
-              "      async function convertToInteractive(key) {\n",
-              "        const element = document.querySelector('#df-42a07aef-3ac8-40e9-9523-9db2998b69b6');\n",
-              "        const dataTable =\n",
-              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
-              "                                                    [key], {});\n",
-              "        if (!dataTable) return;\n",
-              "\n",
-              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
-              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
-              "          + ' to learn more about interactive tables.';\n",
-              "        element.innerHTML = '';\n",
-              "        dataTable['output_type'] = 'display_data';\n",
-              "        await google.colab.output.renderOutput(dataTable, element);\n",
-              "        const docLink = document.createElement('div');\n",
-              "        docLink.innerHTML = docLinkHtml;\n",
-              "        element.appendChild(docLink);\n",
-              "      }\n",
-              "    </script>\n",
-              "  </div>\n",
-              "\n",
-              "\n",
-              "    </div>\n",
-              "  </div>\n"
-            ],
-            "application/vnd.google.colaboratory.intrinsic+json": {
-              "type": "dataframe",
-              "repr_error": "Out of range float values are not JSON compliant: nan"
-            }
-          },
-          "metadata": {}
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "try:\n",
-        "    finall_all_df.to_excel('all_pe_tablets.xlsx', index=False)\n",
-        "    print(\"all_pe_tablets.xlsx exported successfully!\")\n",
-        "except Exception as e:\n",
-        "    print(f\"Error exporting to Excel: {e}\")"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "pwzUKYozFw9a",
-        "outputId": "8efaeeb4-54ab-45eb-ef38-a46fa6c35aaa"
-      },
-      "execution_count": 74,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "all_pe_tablets.xlsx exported successfully!\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# show 5 first row\n",
-        "display(finall_all_df.head())"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/",
-          "height": 660
-        },
-        "id": "QEh0AFZdGPpp",
-        "outputId": "df2e73d1-4e8a-4abc-eeee-e8c77f711dcb"
-      },
-      "execution_count": 76,
-      "outputs": [
-        {
-          "output_type": "display_data",
-          "data": {
-            "text/plain": [
-              "   artifact_id museum_no  designation publications_key        provenience  \\\n",
-              "0         8014  Sb 02749  MDP 06, 214   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "1         8041  Sb 15097  MDP 06, 244   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "2         8059  Sb 15113  MDP 06, 266   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "3         8068  Sb 15121  MDP 06, 275   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "4         8079  Sb 15131  MDP 06, 287   Scheil1905MDP6  Susa (mod. Shush)   \n",
-              "\n",
-              "                             period                   collections  \\\n",
-              "0  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "1  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "2  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "3  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "4  Proto-Elamite (ca. 3100-2900 BC)  Louvre Museum, Paris, France   \n",
-              "\n",
-              "  publications_exact_ref  height  thickness  width          genres  \\\n",
-              "0                    214     NaN        NaN    NaN  Administrative   \n",
-              "1                    244   125.0       20.0   90.0  Administrative   \n",
-              "2                    266    40.0       17.0   56.0  Administrative   \n",
-              "3                    275    58.0       18.0   48.0  Administrative   \n",
-              "4                    287    58.0       15.0   46.0  Administrative   \n",
-              "\n",
-              "  artifact_preservation cdli_comments provenience_comments seal_information  \n",
-              "0                   NaN           NaN                  NaN              NaN  \n",
-              "1                   50%           NaN                  NaN              NaN  \n",
-              "2              fragment           NaN                  NaN              NaN  \n",
-              "3              fragment           NaN                  NaN              NaN  \n",
-              "4              complete           NaN                  NaN              NaN  "
-            ],
-            "text/html": [
-              "\n",
-              "  <div id=\"df-8e3e43a2-09b6-4fa9-b706-798fa48f419a\" class=\"colab-df-container\">\n",
-              "    <div>\n",
-              "<style scoped>\n",
-              "    .dataframe tbody tr th:only-of-type {\n",
-              "        vertical-align: middle;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe tbody tr th {\n",
-              "        vertical-align: top;\n",
-              "    }\n",
-              "\n",
-              "    .dataframe thead th {\n",
-              "        text-align: right;\n",
-              "    }\n",
-              "</style>\n",
-              "<table border=\"1\" class=\"dataframe\">\n",
-              "  <thead>\n",
-              "    <tr style=\"text-align: right;\">\n",
-              "      <th></th>\n",
-              "      <th>artifact_id</th>\n",
-              "      <th>museum_no</th>\n",
-              "      <th>designation</th>\n",
-              "      <th>publications_key</th>\n",
-              "      <th>provenience</th>\n",
-              "      <th>period</th>\n",
-              "      <th>collections</th>\n",
-              "      <th>publications_exact_ref</th>\n",
-              "      <th>height</th>\n",
-              "      <th>thickness</th>\n",
-              "      <th>width</th>\n",
-              "      <th>genres</th>\n",
-              "      <th>artifact_preservation</th>\n",
-              "      <th>cdli_comments</th>\n",
-              "      <th>provenience_comments</th>\n",
-              "      <th>seal_information</th>\n",
-              "    </tr>\n",
-              "  </thead>\n",
-              "  <tbody>\n",
-              "    <tr>\n",
-              "      <th>0</th>\n",
-              "      <td>8014</td>\n",
-              "      <td>Sb 02749</td>\n",
-              "      <td>MDP 06, 214</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>214</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>1</th>\n",
-              "      <td>8041</td>\n",
-              "      <td>Sb 15097</td>\n",
-              "      <td>MDP 06, 244</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>244</td>\n",
-              "      <td>125.0</td>\n",
-              "      <td>20.0</td>\n",
-              "      <td>90.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>50%</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>2</th>\n",
-              "      <td>8059</td>\n",
-              "      <td>Sb 15113</td>\n",
-              "      <td>MDP 06, 266</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>266</td>\n",
-              "      <td>40.0</td>\n",
-              "      <td>17.0</td>\n",
-              "      <td>56.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>fragment</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>3</th>\n",
-              "      <td>8068</td>\n",
-              "      <td>Sb 15121</td>\n",
-              "      <td>MDP 06, 275</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>275</td>\n",
-              "      <td>58.0</td>\n",
-              "      <td>18.0</td>\n",
-              "      <td>48.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>fragment</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "    <tr>\n",
-              "      <th>4</th>\n",
-              "      <td>8079</td>\n",
-              "      <td>Sb 15131</td>\n",
-              "      <td>MDP 06, 287</td>\n",
-              "      <td>Scheil1905MDP6</td>\n",
-              "      <td>Susa (mod. Shush)</td>\n",
-              "      <td>Proto-Elamite (ca. 3100-2900 BC)</td>\n",
-              "      <td>Louvre Museum, Paris, France</td>\n",
-              "      <td>287</td>\n",
-              "      <td>58.0</td>\n",
-              "      <td>15.0</td>\n",
-              "      <td>46.0</td>\n",
-              "      <td>Administrative</td>\n",
-              "      <td>complete</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "      <td>NaN</td>\n",
-              "    </tr>\n",
-              "  </tbody>\n",
-              "</table>\n",
-              "</div>\n",
-              "    <div class=\"colab-df-buttons\">\n",
-              "\n",
-              "  <div class=\"colab-df-container\">\n",
-              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-8e3e43a2-09b6-4fa9-b706-798fa48f419a')\"\n",
-              "            title=\"Convert this dataframe to an interactive table.\"\n",
-              "            style=\"display:none;\">\n",
-              "\n",
-              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
-              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
-              "  </svg>\n",
-              "    </button>\n",
-              "\n",
-              "  <style>\n",
-              "    .colab-df-container {\n",
-              "      display:flex;\n",
-              "      gap: 12px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert {\n",
-              "      background-color: #E8F0FE;\n",
-              "      border: none;\n",
-              "      border-radius: 50%;\n",
-              "      cursor: pointer;\n",
-              "      display: none;\n",
-              "      fill: #1967D2;\n",
-              "      height: 32px;\n",
-              "      padding: 0 0 0 0;\n",
-              "      width: 32px;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-convert:hover {\n",
-              "      background-color: #E2EBFA;\n",
-              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
-              "      fill: #174EA6;\n",
-              "    }\n",
-              "\n",
-              "    .colab-df-buttons div {\n",
-              "      margin-bottom: 4px;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert {\n",
-              "      background-color: #3B4455;\n",
-              "      fill: #D2E3FC;\n",
-              "    }\n",
-              "\n",
-              "    [theme=dark] .colab-df-convert:hover {\n",
-              "      background-color: #434B5C;\n",
-              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
-              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
-              "      fill: #FFFFFF;\n",
-              "    }\n",
-              "  </style>\n",
-              "\n",
-              "    <script>\n",
-              "      const buttonEl =\n",
-              "        document.querySelector('#df-8e3e43a2-09b6-4fa9-b706-798fa48f419a button.colab-df-convert');\n",
-              "      buttonEl.style.display =\n",
-              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
-              "\n",
-              "      async function convertToInteractive(key) {\n",
-              "        const element = document.querySelector('#df-8e3e43a2-09b6-4fa9-b706-798fa48f419a');\n",
-              "        const dataTable =\n",
-              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
-              "                                                    [key], {});\n",
-              "        if (!dataTable) return;\n",
-              "\n",
-              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
-              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
-              "          + ' to learn more about interactive tables.';\n",
-              "        element.innerHTML = '';\n",
-              "        dataTable['output_type'] = 'display_data';\n",
-              "        await google.colab.output.renderOutput(dataTable, element);\n",
-              "        const docLink = document.createElement('div');\n",
-              "        docLink.innerHTML = docLinkHtml;\n",
-              "        element.appendChild(docLink);\n",
-              "      }\n",
-              "    </script>\n",
-              "  </div>\n",
-              "\n",
-              "\n",
-              "    </div>\n",
-              "  </div>\n"
-            ],
-            "application/vnd.google.colaboratory.intrinsic+json": {
-              "type": "dataframe",
-              "repr_error": "Out of range float values are not JSON compliant: nan"
-            }
-          },
-          "metadata": {}
-        }
-      ]
-    }
-  ],
-  "metadata": {
-    "colab": {
-      "name": "Welcome To Colab",
-      "provenance": [],
-      "include_colab_link": true
-    },
-    "kernelspec": {
-      "display_name": "Python 3",
-      "name": "python3"
-    }
-  },
-  "nbformat": 4,
-  "nbformat_minor": 0
-}
+&P008014 = MDP 06, 214 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. |M175+M131~d| M305 M263 x M288 , 2(N01) 
+3. M066~a M352~o x M305# , 1(N01) 
+4. M296#? M296#? M320 , 1(N01) 
+5. |M157~a+M131| M124 , 1(N01) 
+6. M048~c , 2(N01) 
+7. M381 x , 1(N14) 
+8. M217 M124 M218 M219 M102~d M097~h , 2(N01) 
+9. M203~c |M136+M365|? , 4(N01) 
+10. M305~h M124 M297 , 3(N39B) 
+11. M038~e? |M327+M057| , 1(N14) 
+@reverse 
+@column 1 
+1. M288 , 4(N14) 1(N01) 3(N39B) 
+
+
+&P008041 = MDP 06, 244 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. M391 M056~e# [...] x [M288] , 3(N14) [...] 
+3. [...] x x M288 , 1(N34) 2(N14) [...] 
+4. [...] M249~p [M288] , [...] 1(N14) 2(N01) 
+5. M203~c M288 , 3(N14) 1(N24)#? 
+6. M136# M288 , 2(N14) 3(N01) 
+7. M056~e M288 , 3(N34) 2(N45) 2(N14) 3(N01) 
+8. x M288 , 5(N14) 
+9. M214~c M124 M075~ab#? M329~c M288 , 5(N14) 
+10. M217~e M377 M247~g M288 , 1(N34) 6(N14)#? 4(N01)# 
+11. M136~b x M288 , 3(N14) 4(N39B) 
+12. M361~b M288 , 3(N14) 
+13. M302~s# M288 , 2(N14) [...] 
+14. [...] M302~s# M124 M288 , [...] 
+15. M317~e M288 , n(N14)# 4(N01) 
+16. M111~b# M136~b M288 , 1(N14) 1(N01) 
+17. x x [...] [M288] , [...] 
+18. [...] [M288] , [...] 
+@reverse 
+@column 1 
+1. M247~f#? M096# M288# , 1(N45) 6(N14)# 3(N01)#? 
+2. M146#? x x x [...] , [...] 
+3. [...] x x , [...] 
+4. [...] M347 M219 M101 , 1(N45) 1(N14) 2(N01) 
+@column 2 
+1. [...] , 9(N34)# 4(N14) 3(N01) 1(N39B) 
+2. x , 
+
+
+&P008059 = MDP 06, 266 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , [...] 4(N01)# 
+2'. M374~c# [...] , [...] 
+$ n lines broken 
+3'. [...] , [...] 6(N01)# 
+4'. M281~f M149~a1# M387# [...] , [...] 
+$ n lines broken 
+5'. [...] M075~m#? M149~a1# x [...] , [...] 
+$ n lines broken 
+6'. [...] , 1(N01) 
+7'. x [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , [...] 4(N01)# 
+2'. M057# [...] , [...] 
+$ n lines broken 
+3'. M387# , 2(N14) 
+4'. M136#? [...] , [...] 
+$ rest broken 
+@column 2 
+$ broken 
+
+
+&P008068 = MDP 06, 275 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] x , 5(N01)# 3(N39B) [...] 
+$ n lines broken 
+2'. [...] , [...] 2(N30C)# 
+3'. M009~a M149~a1 M388 M387 M387 M352~n2 M228~ga M347 M377~e , [...] 
+$ n lines broken 
+4'. [...] , [...] 1(N24)# 1(N30C)# 
+5'. |M175+M136|#? M387~ca , 1(N39B) 1(N24) 2(N30C) 
+6'. x [...] , [...] 
+$ n lines broken 
+7'. [...] , [...] 1(N01)# 1(N39B)# 1(N30C) 
+8'. M038~a1 x [...] , [...] 
+$ rest broken 
+@reverse 
+$ broken 
+
+
+&P008079 = MDP 06, 287 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157# , 
+# header 
+2. M136~b M124 M217 M097~h x , 1(N01) 
+3. |M370~b+M072| , 2(N01) 
+4. M001 M346 , 
+#tr.en: (subscript) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008106 = MDP 06, 317 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+#tr.en: ... 
+# header 
+2. M005~a M257~d M348 M346 , 9(N14) 8(N01) 
+#tr.en: ...’s ewes: 98, 
+3. M263~1 M295~da x , 5(N14) 1(N01) 
+#tr.en: ...’s: 51, 
+4. |M218+M320|# x M001 , 9(N14) 
+#tr.en: ...’s: 90 
+5. M009#? [...] , [3(N14) 4(N01)] 
+#tr.en: ...’s: 34 
+6. M136~a#? M005~a , 2(N14) 
+#tr.en: ...’s: 20; 
+@reverse 
+1. M346 , 2(N23) 9(N14) 3(N01) 
+#tr.en: (total) ewes: 293. 
+# calculation: 98 + 51 + 90 + 34 + 20 = 293 
+$ blank space 
+
+&P008119 = MDP 06, 330 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. M157# , 
+2'. M391 , 3(N01) 
+3'. [...] , 2(N01) 
+4'. M376 , 3(N01) 
+$ n lines broken 
+5'. [...] , 3(N01) 
+6'. M001 , 7(N01) 
+7'. M376 , 6(N01) 
+8'. M149~a , 2(N01)? 
+9'. M263~h x , [...] 
+$ n lines broken 
+10'. [...] , 2(N01) 
+11'. M302~a , 2(N01) 
+12'. |M136+X| M032? , 1(N14) 5(N01) 
+13'. M325~d M032 , 3(N01) 
+14'. M376 , [...] 
+$ n lines broken 
+15'. M203~a , 1(N01) 
+16'. M103~1 x x M096 M282 M096 M376 , 1(N01) 1(N08A)#? 
+#Monaco has M282 
+17'. M325~d M149~a x , [...] 
+$ n lines broken 
+19'. |M305+M180| M032# , 1(N01) 
+20'. x , 5(N01) 
+21'. M149~a1 , 2(N01) 
+22'. x M149~a , x 
+$ rest broken 
+@reverse 
+$ broken 
+
+
+&P008125 = MDP 06, 343 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. M004 M136~c M124 M263~b# [...] , [...] 
+$ n lines broken 
+2'. [...] , [...] 1(N01) 
+3'. |M370+M046+M370|#? , 1(N01) 
+4'. |M370+M072+M370| , 2(N01)# 
+$ n lines broken 
+5'. M046 , 1(N01) 
+6'. |M370+M046+M370| , 1(N01) 
+7'. M288 , 6(N01)# 
+$ n lines broken 
+8'. |M370+M046+M370| , 1(N01) 
+9'. M288 , 1(N01) 3(N39B) 1(N24) 
+$ n lines broken 
+10'. |M370+M072+M370|# , 2(N01) 
+11'. |M370~b+M072|#? , 2(N01) 
+12'. M288 , 4(N01) 1(N39B)# 
+$ n lines broken 
+13'. M288 , 2(N01) 
+14'. M371 M009 M371 M003~c , 2(N01) 
+15'. M370 M001# [...] , [...] 
+16'. M281~a# M003~b , 1(N01) 
+17'. M370 M376 [...] , 1(N08A)# 
+18'. |M370+M046+M370| , 1(N01) 
+$ (last line on edge but gone now?) 
+@reverse 
+$ broken ? 
+
+
+&P008139 = MDP 06, 357 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. |M195+M057| |M305+X|? M264~a , 2(N01) 
+3. M263 , 3(N01) 
+4. M387 M376#? , 2(N01) 
+5. M263# , 1(N01) 
+6. M002 , 2(N30C) 
+7. M305 M388 M066 M259 M218 M263~e , 1(N01)# 
+8. M136~c# x M388 M152 M057~a2 M260 , 1(N01) 
+9. M036#? , 2(N01) 
+@reverse 
+@column 1 
+1. M260#? , 1(N01)#? 2(N39B)#? 
+@top 
+1. 1(N34)#? 
+
+
+&P008142 = MDP 06, 360 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. M038~a M029~a M149~a M388 M387 , 7(N01) 
+3. M038~e M387 , 3(N01) 
+4. M500 M145 M387 , 2(N01) 
+5. M046~a M387 , 2(N01) 
+6. M136~c M029~b M387 , 2(N14) 
+7. |M157+M131| M374~c , 1(N01) 
+@reverse 
+@column 1 
+1. M374~c , 2(N01) 
+2. M387 , 4(N01) 
+3. M149~a , 5(N01) 
+@top 
+1. 1(N34) 
+$ seal 1 ? 
+# seal 1 = PESxxxx 
+
+
+&P008152 = MDP 06, 370 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157# , 
+# header 
+2'. M391 , 2(N01) 
+3'. M038~i# M288# , 1(N45) 1(N14) 5(N01) 1(N24) 
+$ n lines broken 
+4'. [...] , 4(N14) 
+5'. x M288 , 7(N34)# 1(N45)# 2(N01) 2(N39B) 
+$ n lines broken 
+6'. [...] , 1(N24) 
+7'. M205# M149~a1# M069~ab M288 , 3(N01) 
+8'. M136~c M288 , 5(N14) 
+$ n lines broken 
+9'. M139# M388 M218 M318#? , 1(N24) 
+10'. M325~e , 1(N01) 3(N39B) 1(N24) 1(N30C) 1(N30D) 
+$ n lines broken 
+11'. [...] , 3(N14) 
+12'. x M103# M295~e# x , [...] 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008156 = MDP 06, 375 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. M203~c M136~p#? M304 x M146~d M264~a , 1(N01) 
+3. |M036+1(N30D)| , 1(N14) 
+4. x M051~b M388 M146 M251~c# M218 M297 , 3(N39B) 
+5. M111~b# M388 M347 M110 M250~ba# M387 M218 M297 , 3(N39B) 
+@reverse 
+@column 1 
+1. M039~h M297 , 3(N39B)# 
+2. M269~1 M260# , 1(N01) 
+3. |M036+1(N14)| , 2(N01) 
+@column 2 
+1. M297 , 2(N01) 1(N39B) 1(N30C) 
+
+
+&P008173 = MDP 06, 393 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 
+2. M376 , 3(N01) 
+3. M291 M380~b M371 [M376?] , 2(N01) 1(N08A) 
+4. M029~a#? M054#? M376 , 1(N01) 
+5. M039~a M103#? M376 , [1(N01)] 
+6. x x M136~r# M203~a , 4(N01)# 
+7. x 
+@reverse 
+@column 1 
+1. M376# , 7(N01) 1(N08A) 
+2. M203~a , 4(N01)# 
+@top 
+1. 1(N34)# 
+
+
+&P008180 = MDP 06, 400 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] x M136~n# M317 , 4(N01) 
+$ n lines broken 
+2'. x M096 M317 , [...] 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008183 = MDP 06, 4995 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. M136~s M387~a M261~d1 , 4(N01)# [...] 
+$ n lines broken 
+3a'. [...] M003~b M297 , 2(N01) 
+3b'. M002~b , 1(N39B) 
+3c'. M379~d , 2(N30C) 1(N30D) 
+4'. M387~ef x , [...] 
+$ n lines broken 
+5'. [...] , 2(N30C@b) 
+6'. x , 1(N14)#? 1(N30C) 
+7'. x M009# M281~f# M096# M263# , [...] 
+$ n lines broken 
+8'. x , [...] n(N01) 
+9'. x M352~n#? M096# |M260~1+1(N24)|# , 1(N01) 
+10'. |M036+1(N30D)|# , [...] 
+11'. [...] x |M260+1(N24)| , 1(N01) 
+12'. |M036+1(N30D)|# , 5(N01)# 
+@reverse 
+@column 1 
+1. [...] , [...] 1(N24)# 
+@top 
+1. 1(N34) 
+
+
+&P008194 = MDP 06, 5009 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] M247~g M377# M217#? x [...] , [...] 
+$ n lines broken 
+2'. [...] , 5(N14)# 2(N01) 3(N39B) 
+3'. M136~b#? [...] , [...] 
+$ n lines broken 
+4'. [...] M056~f# M288 , 1(N14) 1(N01) 
+5'. M075~g M056~f M288 , [...] 
+$ n lines broken 
+6'. [...] M203~a# M288 , 1(N14) 
+7'. M305 M388 M054 x [...] , [...] 
+$ n lines broken 
+8'. [...] x M288 , 3(N01) 
+9'. M292~a M388 M146# [...] , [...] 
+$ n lines broken 
+10'. [...] , 1(N14) 
+11'. M203~c M217# M288# , [...] 
+$ n lines broken 
+12'. x M005~a# [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] , [...] 5(N14)# 1(N01)# 2(N39B)# [...] 
+$ rest broken 
+
+
+&P008203 = MDP 17, 005 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365|# , 
+# header 
+2. |M175+M153| M270~e , 2(N39B) 1(N30C) [...] 
+3. [...] M264~d2 , 1(N01) 
+4. M270~e , 1(N01) 
+5. M297 , 1(N39B) [...] 
+$ (scribal design 1 = SD004 ?) 
+@reverse 
+@column 1 
+1. M288 , 4(N39B) 1(N24) 2(N30C) 
+$ (scribal design 2 = SD007) 
+
+
+&P008206 = MDP 17, 008 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. |M351+3(N01)| M288 M009 , 3(N01) 
+3. |M260~2+1(N24)| , 1(N01) 1(N39B) 
+@reverse 
+$ blank 
+
+
+&P008215 = MDP 17, 017 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M327+M342| 
+# header 
+2. |M136+M365|# x , 
+3.a. |M351+3(N01)| M075~m , 1(N39B) 
+3.b. M075~k , 1(N39B) 
+3.c. M075~o , 1(N39B) 
+4.a. M059~a M075~m , 1(N39B) 
+4.b. M075~k , 1(N39B) 
+4.c. M075~o , 1(N39B) 
+5.a. M387~l# M075~m , 1(N39B) 
+5.b. M075~k , 1(N39B) 
+5.c. M075~o# , 1(N39B) 
+6.a. M286 M214#? M075~m# , 1(N39B)# 
+6.b. M075~k# , 1(N39B)# 
+6.c. M075~o , 1(N39B) 
+7.a. M009~a M075~m# , 1(N39B) 
+7.b. M075~k# , 1(N39B) 
+7.c. M075~o! , 1(N39B) 
+@reverse 
+@column 1 
+1. M075~m# M075~k# , 2(N01) 
+2. M075~o , 1(N01) 
+
+
+&P008224 = MDP 17, 026 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M157+M136| , 
+# header 
+2. M266~b#? M297 M036 , 2(N01)# 1(N39B) 1(N24) 1(N30C) 
+3. M010~2 , 4(N39B) 1(N24) 1(N30C) 1(N30D) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008234 = MDP 17, 036 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. M243~j , 1(N39B) 
+3. M036 , 1(N24)# 
+4. M010~2# , 1(N30C)# 
+5. x M050~k# , 1(N30C)#? 
+6. M057~b1 [...] , [...] 
+7. [...] M259#? M218 , 1(N01) 
+8. M243~j , 2(N39B) 
+9. M145 M372 , 1(N01) 
+10. M243~j , 1(N39B) 
+11. M388 M263 M048~c# M377 M057~b1 M387 M218 , 1(N01) 
+12. M263 , 1(N01) 
+13. M014~a , 1(N30C@b) 
+14. M036 , 1(N30C) 
+15. M294~a M050~k3 , 1(N30C) 
+16. M036 , 2(N30C) 1(N30C@b) 
+17. |M175+M136| M057~b , 1(N01) 
+18. M048~c M243~j , 1(N39B) 
+19. M124 M387~ef M259 M240 M263 M048~c# M096# , 1(N01) 
+20. M387~ef# M294~a# M050~k2# , 1(N30C) 
+21. M036#? , 2(N30C) 
+22. M014~a#? , 1(N30C) 
+23. M387# M036 , 1(N30C) 
+@reverse 
+@column 1 
+1. [...] , 2(N30C) 
+@column 2 
+1. M312~c# M036 , 1(N01) 2(N39B) 1(N30C) 
+2. M014~a#? , 1(N24)# 2(N30C) 
+4. M050~k# , [...] 
+$ (scribal design 1 = SD001) 
+
+
+&P008239 = MDP 17, 041 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M325# , 
+# header 
+2. |M175+M136|#? |M036+1(N14)|# M243~e M388 M347 M377 M218 , 1(N01) 
+3. M243~e , 2(N39B)# 
+4. M263 , 2(N01)# 
+5. [...] , 1(N30C)# 
+6. M066 M352~o M315? M329 M243~e# , 1(N39B) 
+7. M206~b M301 M263 , 1(N01)# 
+8. M372 M128~db M096 M263 , 1(N01) 
+9. M243~e# , 1(N01) 
+10. M124 M412 M387~ef M263 , 1(N01) 
+11. |M036+1(N14)| , 2(N30C) 
+12. M124# M367# , 1(N30C) 
+13. M387~ef M180~b |M036+1(N14)| , 1(N24) 1(N30C@b) 
+14. M263 , 2(N01) 
+15. M036 , 1(N30C)# 
+@reverse 
+@column 1 
+1. [...] , [...] 2(N01) 
+@top 
+1. 1(N34) 
+
+
+&P008242 = MDP 17, 044 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. M291 M388 M315~a? M024~a1 [...] , [...] 
+2'. |M228~b+M101| M004 M218 , 1(N01) 
+3'. M124 M141~a M097~h? M387 M218 , 2(N01) 
+4'. M387~ef M115~a M096 , 1(N01) 
+5'. |M217+M124| M066~a M102~k2 M004 M218 , 2(N01) 
+6'. M240# M096 , 1(N01) 
+7'. M096 M372 , 1(N01) 
+8'. |M136+M151| M098 [...] , [...] 
+@reverse 
+@column 1 
+1. [...] , [...] 
+2. M072 , 5(N01) 
+$ seal 1 
+# seal 1 = PES0267 = PES1012 
+
+
+&P008245 = MDP 17, 047 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~c , 
+# header 
+2. |M305+M332|#? x , 1(N30C@b) 
+3. M379~g , 1(N30D@b) 
+4. M057 M243~j , 1(N39B) 
+5. M386~a M240 M263 M371 x , 1(N01) 1(N14)# 
+@reverse 
+@column 1 
+1. M243~j# , 1(N39B) 1(N24) 
+2. M002 , 1(N30C@b) 1(N14) 
+
+
+&P008246 = MDP 17, 048 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M175+M136~n|# , 
+# header 
+2. M387~a |M036+1(N39C)|# , 2(N30C) 
+3. M261~a1 , 1(N01) 
+4. M263 , 2(N01)# 
+5. [...] M124# , 1(N30C) 1(N30D) 
+6. M387~ef M248~e , 1(N30C) 1(N30D) 
+7. M036? , 1(N24) 1(N30C@b) 1(N30D@b)# 
+
+
+&P008247 = MDP 17, 049 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~a# , 
+# header 
+2. |M106+M288|#? M288 , 7(N14) 3(N01) 
+$ (scribal design 1 = SD011) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008260 = MDP 17, 062 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M175+M136| , 
+# header 
+2. M124 M288 , 2(N14) 1(N24) 
+3. M128~ca M377~e M347 M371# [M288] , 6(N14) 2(N01) 
+4. M195 M288 , 1(N14) 
+5. M147~d M101 M288 , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. M288#? , [...] 
+2. x M288 , [...] 
+$ rest broken 
+
+
+&P008264 = MDP 17, 066 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 
+# header 
+2. M088 , 1(N30D) 
+3. |M136+M365| M088 , 1(N30D) 
+@reverse 
+$ blank space 
+# sic? 
+@top 
+1. 1(N34)# 
+
+
+&P008273 = MDP 17, 075 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. [...] , 4(N01) 
+3. M193 , 4(N01) 
+4. x , 1(N14) 1(N01) 
+5. M136~k , 1(N14) 
+6. M210~g , 1(N01) 
+7. [...] , 4(N01) 
+8. M348 , 1(N01) 
+9. M325 , 3(N01) 
+10. [...] , 3(N01)# 
+@reverse 
+@column 1 
+11. [...] x , 1(N34) 1(N14) [...] 
+
+
+&P008277 = MDP 17, 079 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. [...] , 1(N01)# 
+3. M373 , 1(N01) 
+4. M205~c , 7(N01) 
+5. M061 , 2(N01) 
+6. [...] , [...] 
+7. [...] , 2(N01) 
+8. M193~g , 1(N01) 
+9. M134~g , 2(N01) 
+10. M286 , 2(N01) 
+11. |M136+M387| , 4(N01) 
+12. M053~a# , 2(N01)# 
+13. M373 , 2(N01) 
+14. M059 , 4(N01) 
+15. M053~a , 5(N01) 
+16. M373 , 2(N01) 
+17. M383~d , 2(N01) 
+18. M073~h , 5(N01) 
+19. M053~a , 2(N01) 
+20. M373 , 2(N01) 
+21. |M386+M111~j|# , 3(N01) 
+22. M210 , 6(N01)# 
+23. [...] , 1(N01)#? 
+24. M053~a# , 1(N01) 
+25. x , 1(N01) 
+26. x , 1(N01) 
+27. M134#? , [...] 
+@reverse 
+@column 1 
+1. M054 , 6(N14) 1(N01) 
+
+
+&P008279 = MDP 17, 081 + 347 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~r# , 
+# header 
+2. |M175+M136| M380~b M387~ef M266~b# M261~b1# , 1(N01) 
+3. M263 , 1(N01) 
+4. M294~a M050~k2# , 1(N24) 
+5. M036 , 2(N39B) 
+6. M002 , 1(N24) 
+7. M387~a M261~b1 , 3(N01) 
+8. M263 , 2(N01) 
+9. M036 , 2(N39B) 
+10. M010 , 2(N30C) 
+11. M387~ef M263 , 1(N01) 
+12. M294~a# M050~k# , 2(N30C) 
+13. M036 , 1(N39B) 
+14. M010 , 2(N30C) 
+15. M387~a# M261~b1 , 2(N01) 
+16. M263 , 1(N01) 
+17. M036 , 1(N24) 
+18. M010 , 2(N30C) 
+19. M387~ef M263 , 2(N01) 
+20. M294~a M050~k , 2(N30C) 
+21. M036# , 1(N39B) 
+22. M010 , 2(N30C) 
+23. M387~a M263 , 5(N01) 
+24. M081 M346# M036 , 1(N39B) 
+25. M010 , 2(N30C) 
+26. M387~ef M263 , 1(N01) 
+27. M036 , 2(N30C) 
+28. M387~a M263 , 2(N01) 
+29. |M036+M010| , 1(N30C@b)? 
+30. M010 , 1(N30C) 
+31. M387~ef M261~a1 , 1(N01) 
+32. M294~a M050~k# , 2(N30C) 
+33. M036 , 1(N39B) 
+34. M002# , 2(N30C)# 
+35. M387~a M261~a1 , 1(N01) 
+36. M263 , 2(N01) 
+37. M036 , 1(N24) 
+38. M010~1#? M010~1#? , 1(N30C) 
+39. M002 , 1(N30C) 
+40. M295~la# x M386~a M240 [...] , [...] 
+41. [...] , 1(N01) 
+42. M504? , 1(N14) 
+@reverse 
+@column 1 
+1. [...] , [...] 1(N39B)# 1(N24) 
+2. M010~2 , 1(N01)# 1(N30C)# 
+3. M050~k1 , 3(N39B) 
+$ (scribal design 1 = SD001) 
+
+
+&P008281 = MDP 17, 083 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M327+M365| M136~k , 
+# header 
+2. M124 M032 , [...] 
+$ n lines broken 
+3'. M376 , 3(N01) 
+4'. M149~a2 , 1(N34) 4(N14) [...] 
+$ n lines broken 
+5'. [...] , [...] 6(N01) 
+6'. M145~f , 1(N14) 6(N01) 
+7'. M374~a , 1(N14) [...] 
+$ n lines broken 
+8'. M152~f , 1(N14) 6(N01) 
+9'. |M351+1(N14)| , 2(N14) [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. M341 , 
+2. M124 M032 , 1(N14) 5(N01) 
+3. M376 , [...] 
+$ n lines broken 
+4'. |M351+1(N14)| , 1(N14) 4(N01) 
+5'. M145~f , 6(N01) 
+6'. M205~d# , [...] 
+$ n lines broken 
+7'. M374~a , 6(N01) 
+8'. M152~g , 6(N01) 
+9'. M007~d# , 3(N01)# 
+$ rest broken 
+
+
+&P008285 = MDP 17, 087 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] |M136+M365|# M288 , 2(N14) 2(N01) 
+2'. M057~a M288 , 3(N01) 
+$ n lines broken 
+3'. [...] , [...] 1(N24)# 
+4'. M208 M288 , 2(N14) 2(N39B) 1(N24) 
+5'. M288 , [...] 
+$ n lines broken 
+6'. [...] , [...] 
+7'. M288 , 4(N01) 1(N39B) 1(N24) 
+@reverse 
+$ blank 
+$ (scribal design 1 = SD012) 
+
+&P008293 = MDP 17, 095 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] M263~b1 , 3(N01) 
+2'. M387 M263~b1 , 2(N01)# 
+$ n lines broken 
+3'. [...] M387# M263~b1 , 1(N01) 
+4'. |M260+M266~a| , 1(N01) 
+5'. M057~b M387 M263~b1 , 2(N01)# 
+6'. M387# M263~b1 , 3(N01) 
+7'. M387 M263~b1 , 2(N01) 
+8'. M387~ef |M260~1+M266~a| , 1(N01) 
+9'. M057~b |M260~1+M266~a|#? , 1(N01) 
+10'. M417~h |M260~a+M265|#? , 1(N01) 
+11'. M263? , 1(N01) 
+12'. M036 , 2(N30C) 1(N30C@b) 
+$ n lines broken 
+13'. [...] , 2(N01) 
+14'. M081 M260~b , 1(N01) 
+15'. M036 , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. M136~p , 
+2. M157 M381 M387 M036 , 1(N24) 2(N30C@b) 
+3. [...] , n 2(N30C)# 
+4. M387 M036 , 2(N30C) 2(N30C@b) 
+5. [...] , 2(N30C@b) 
+6. M387 M036 , 1(N30C) 1(N30C@b) 
+$ n lines broken 
+8'. [...] x , 2(N30C) 
+9'. M036 , 1(N39B)# 2(N30C@b) 
+
+
+&P008296 = MDP 17, 098 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. |M175+M136|# M381# M266~b# M264~b# , 1(N01) 
+2'. M002 , 1(N30C) 
+$ n lines broken 
+3'. [...] , 1(N30C) 
+4'. M002 , 1(N30C) 
+5'. M388 M230~b M262~a M096 M288 , 1(N39B)# [...] 
+$ n lines broken 
+6'. [...] , 1(N39B) 
+7'. M175 M066 M288 , 1(N24) 
+8'. M387 M251~c# M281~f# M096 M288# , [...] 
+$ n lines broken 
+9'. [...] M288# , 2(N39B) 
+10'. M096 M024# M371 M288# , 1(N30C) [...] 
+$ n lines broken 
+11'. x M297#? , 1(N30C)# 
+12'. M318# [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] M297 , 1(N30C) 
+$ n lines broken 
+2'. [...] , 2(N30C) 
+3'. M295# M222 M218 [...] , [...] 
+$ n lines broken 
+4'. [...] , 2(N30C) 
+5'. M124 M262 M387~ef M288# , [...] 
+$ n lines broken 
+6'. [...] M266~b# M263~b# , 1(N01)# 
+7'. x M096# M222# M036# M297 , [...] 
+$ rest broken 
+@column 2 
+1. [...] , [...] 1(N30D) 
+
+
+&P008299 = MDP 17, 101 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M157+M288|#? , 
+# header 
+2. |M304+M342|#? M346#? M367~i# , 2(N01)# 
+3. M125 M136~d M346 M367~i , 2(N01) 
+4. |M175+M288|# M346 , 1(N01) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008302 = MDP 17, 104 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. M387 M056~f , 1(N01)# 
+$ n lines broken 
+3'. [...] , 9(N01@b) 
+$ n lines broken 
+4'. [...] , 3(N01@b)# 4(N39B@b) 
+$ rest broken 
+@reverse 
+$ broken 
+
+
+&P008305 = MDP 17, 107 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 
+2. [...] M157# |M305+M342|# M228~ga , 2(N14) 
+3. M264~a# , [...] 
+$ n lines broken 
+4'. [...] , 1(N14) 
+5'. |M260+1(N24)| , 3(N14) 
+6'. |M136+M365|# M228~ga , 2(N14) 
+7'. M264~a , 4(N14) 
+$ n lines broken 
+8'. [...] , 2(N14)# 
+9'. M111~a M228~ga , 2(N14) 
+10'. M264~a , 4(N14) 
+11'. |M260+1(N24)| , 2(N14) 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. x M228~ga M264~a , 1(N34) 3(N14) 
+2'. |M136+M365|# , [...] 
+$ n lines broken 
+3'. M228~ga M264~a M261~a1 , 1(N34) 2(N14) 
+4'. M111~a#? M228~ga M264~a , 1(N34) [...] 
+$ n lines broken 
+5'. |M351+1(N14)|# , 4(N01)# [...] 
+$ rest broken 
+
+
+&P008307 = MDP 17, 109 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M157+M136|# , 
+# header 
+2. M388 M380 |M218+M320| M347 M377# [...] , [...] 
+$ n lines broken 
+3'. M036 , 1(N39B) 1(N30C@b) 
+4'. M387~ef M297 M036 , 1(N39B) 
+$ n lines broken 
+5'. [...] , 2(N30C) 
+6'. M387~ef M036 , 2(N39B) 1(N24@b) 1(N30C@b) 
+$ n lines broken 
+7'. [...] |M351+1(N14)|# M288 , 1(N24) 
+8'. M387 M346 |M351+1(N14)| M288 , 1(N24)# 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. M387 x M218 M288 , 2(N39B) 
+2'. M124 M380~b x [...] , [...] 
+$ rest broken 
+@column 2 
+1. [...] , [...] 2(N39B) 1(N24) 1(N30C) 1(N30D) 
+2. |M351+1(N14)| , [...] 
+$ rest broken 
+
+
+&P008317 = MDP 17, 119 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. [...] , [...] 
+3. x x , [...] 
+4. M376# , 2(N01) 
+5. M206~b# M004#? M376# , 1(N08A)#? 
+6. M106~b M317 [...] , [...] 
+7. [...] , 3(N01) 
+8. M376 , 6(N01) 
+9. M203~c |M136+M365|# M203~a , 2(N14) 
+10. M376~b# , [...] 
+11. [...] , [...] 
+12. M032 , 1(N01) 
+13. M104 x |M228+M320| M032 , 4(N01) 
+14. M321~b , 1(N01) 
+15. [...] , [...] 
+16. |M305+M009| M175 M321~d# , 1(N01) 
+17. M321~hb# , 3(N01) 
+18. M048~i M175 |M305+M009| [...] , [...] 
+19. M321~b# , 1(N01) 
+20. M005 , 1(N01) 
+21. M376 , 1(N14) 
+22. M376~b , 1(N14) 
+23. M203~a , 1(N14) 
+24. [...] , 2(N01)# 
+25. x , 1(N01)# 
+26. M376# , 1(N01) 
+27. x M376~b#? , 1(N08A)#? 
+@reverse 
+@column 1 
+1. [...] 
+2. M321~b , 8(N01)# 
+3. [...] , 2(N14)# 
+4. M376~b , 4(N14) 5(N01) 1(N08A) 
+
+
+&P008320 = MDP 17, 122 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M327+M342|# , 
+# header 
+2. M136~p M249 |M351+3(N01)| M139 M145~bb , 2(N39B) 1(N24) 
+3. M145~e , 1(N24)# 
+4. M206~f , 1(N34) 
+5. M206~f , 1(N34) 
+6. M252~q , 3(N14) 
+7. M069~f , 1(N30D) 
+8. |M218+M320| , 1(N34) 
+9. M059 M145~bb , 1(N39B) 2(N30C) 
+10. M069~f# , 1(N30C) 
+11. M387~l M145~bb , 1(N39B) 
+12. M252~q# , 2(N14)# 
+13. [...] , 1(N39B)# 
+14. M145~bb# , 1(N39B) 1(N24) 
+15. |M218+M320| , 1(N34) 
+16. M069~f , 1(N30D) 
+17. M009~a M145~bb , 2(N39B) 1(N24) 
+18. [...] , 1(N34) 
+19. M069~f# , 1(N30D) 
+20. M032# , 1(N01) 
+
+
+&P008322 = MDP 17, 124 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M327+M342| , 
+# header 
+2. M054~b , 4(N14) 
+3. M328~b , 2(N14)# 4(N01)# [...] 
+4. [...] , [...] 
+5. [...] , 3(N01) 
+6. M252~l M054~i M059~d , 1(N14) 2(N01) 
+7. M136~i , 1(N14) 2(N01) 
+8. M383~a# , [...] 
+9. [...] , [...] 
+10. [...] M106~b , 1(N01) 
+11. M101 , 1(N14) 4(N01) 
+12. M418~b , 7(N01) 
+13. |M157~a+M367| , 1(N14) 6(N01) 
+14. x , [...] 
+15. [...] , [...] 
+16. [...] M342# M006 , 1(N01) 
+17. M158 , 8(N01) 
+18. M105~a , 1(N01) 
+19. M387~h M367 , 9(N01) 
+20. M054~i M006 , 6(N01)# 
+21. M001# M367# , 6(N01)# 
+22. M136~i , 4(N01) 
+23. M367 M193~f , 2(N01) 
+24. M134~a , 3(N01) 
+25. M325~d , 2(N01) 
+26. M059~b# , 7(N01)#? 
+27. M105~a , 1(N01) 
+28. M151~e M059~b , 3(N01) 
+29. M367 M105~a , 1(N01) 
+30. M348 , 1(N01) 
+31. M304 M006 , 3(N01) 
+32. M328~b M059~d , 2(N14) [...] 1(N01)# [...] 
+33. [...] , [...] 
+34. M136# , 2(N14) 2(N01) 
+35. M003# , 1(N14) 4(N01)# 
+36. M193~f , 1(N01) 
+37. M325 M378 , 1(N01) 
+38. M210 , 1(N14) 4(N01) 
+39. M105~a , 1(N01) 
+40. M003 , 8(N01)# 
+41. M054~i# , 1(N14)# 7(N01)# 
+42. M105~a , 1(N01) 
+43. M003# , 6(N01)# 
+44. M105~a , 2(N01) 
+45. M365 , 3(N01) 
+46. M003 , 2(N01) 
+47. M383~k 8(N01)# 
+48. M368~c , 6(N01) 
+49. M003 , 3(N01) 
+50. M105~a , 1(N01) 
+51. M074~b M316~q , 1(N01) 
+
+
+&P008323 = MDP 17, 125 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157# , 
+# header 
+2. M387 M266~b# M261~b1 , 3(N01) 
+3. M263~a , 2(N01) 
+4. M387~ef [...] , [...] 
+$ n lines broken 
+5'. M387 M260~1# , 1(N01) 
+6'. M263 , 4(N01) 
+7'. |M175+M136| M266~b M261~b1 , 2(N01)# 
+$ n lines broken 
+8'. M261~b1 , 1(N01) 
+$ rest broken 
+@reverse 
+$ broken 
+
+
+&P008343 = MDP 17, 145 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 2(N01)# 
+$ n lines broken 
+2'. [...] M175 , 1(N14) 4(N01) 
+3'. M124 [...] , [...] 
+$ n lines broken 
+4'. [...] M003~b , 2(N01) 
+5'. M080~b M320 M066~a , 2(N01) 
+6'. M248~c [...] , [...] 
+$ n lines broken 
+7'. [...] , 2(N01) 
+8'. M136~g M041 , 3(N01) 
+9'. M124 M218 M332# [...] , [...] 
+$ n lines broken 
+10'. [...] , 2(N01) 
+11'. M153 M145 M371 , 2(N01) 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008344 = MDP 17, 146 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1'. |M136+M365| , 
+# header 
+2'. M327# [...] , [...] 
+$ n lines broken 
+3'. [...] , 3(N01) 
+4'. M005 , 5(N01) 
+5'. M321#? , [...] 
+$ n lines broken 
+6'. [...] |M327+M342| M032 , 5(N01) 
+7'. M321# , 
+$ n lines broken 
+8'. [...] , 5(N01)# 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , 5(N01) 
+2'. M005 , 1(N14) 
+@top 
+1. 1(N34) 
+
+
+&P008347 = MDP 17, 149 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 4(N39B)# 
+2'. x , 1(N39B@c) 1(N39B) 
+3'. M327#? , 1(N39B@c) 
+4'. M354 , 1(N14) 
+5'. M136~i , 1(N39B@c) 2(N39B)# 
+6'. M354# , 1(N14)# 
+7'. x , 1(N39B@c) 
+8'. M354 , 1(N14) 
+9'. M386~d , 1(N39B@c) 1(N39B) 
+10'. x , n 1(N39B) 
+@reverse 
+@column 1 
+1. |M195+M057|#? , 1(N01@c) 3(N39B@c) 
+2. M001 , 1(N01) 3(N39B)# 
+3. M354 , 3(N14) 
+
+
+&P008349 = MDP 17, 151 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. M125 x M359 M367 , 4(N01) 
+#tr.en: 4 billy goats beloning to x 
+3. M269~c , 1(N08A) 
+#tr.en: 1 unit of ghee 
+4. M106~a# , 2(N30C) 
+#tr.en: 1 unit of dry cheese 
+5. M009 , 1(N01) 
+6. M292~f# , 1(N01) 
+7. M102~d , 2(N01) 
+8. M246~m , 1(N01) 
+9. M209~c M388 M080~a x M367# , 4(N01) 
+#tr.en: 4 billy goats beloning to x 
+10. M269~c , 1(N08A)#? 
+#tr.en: 1 unit of ghee 
+11. M106~a# , 2(N30C) 
+#tr.en: 1 unit of dry cheese 
+12. M009 , 1(N01) 
+13. M292~f# , [1(N01)] 
+14. [M102~d] , 2(N01) 
+15. M246~m , 1(N01) 
+@reverse 
+@column 1 
+1. [...] , [...] 
+2. [...] , 1(N01)# 
+3. M009 , 2(N01) 
+4. M292~f , 2(N01) 
+5. M102~d , 4(N01) 
+6. M246~m , 2(N01) 
+
+
+&P008357 = MDP 17, 159 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365|# , 
+# header 
+2. |M351+3(N01)| [...] , [...] 
+3. [...] M195 M388 M371 M387 x [...] , [...] 
+4. [...] M004 |M106+M288|# M066 , 3(N01)# 
+@reverse 
+@column 1 
+$ broken 
+
+
+&P008387 = MDP 17, 189 + 336 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M175+M136| , 
+# header 
+2. M380 M266~b# M263 , 1(N01) 
+3. M387~ef , [...] 
+$ n lines broken 
+4'. [...] , 2(N30C) 
+5'. M010~2# , 1(N30C) 
+6'. M387~a# M002 , 1(N30C@b)? 
+$ n lines broken 
+7'. M294~a M050~k4 , 2(N30C) 
+8'. M036 , 1(N24) 1(N30C)# 
+$ n lines broken 
+9'. x , 1(N30C) 
+10'. M387~a# M346 M081 , 1(N01) 
+@reverse 
+@column 1 
+1. [...] , 1(N39B) 2(N30C) 
+$ (scribal design 1 = SDxxx) 
+
+
+&P008441 = MDP 17, 243 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] x , 2(N39B) 
+2'. M386 M263 , [...] 
+$ n lines broken 
+3'. [...] x M066 , [...] 
+4'. [...] M263~a# |M036+1(N30D)|# , [...] 
+$ n lines broken 
+5'. [...] , 1(N24)# 1(N30C)# 
+6'. M263 , 1(N01) 1(N24) 
+7'. M175 M136~c , 1(N39B) 
+$ n lines broken 
+8'. x x M380 |M218+M288| M263 , 1(N01) 
+9'. M248~a M259 M036 , 1(N24) 2(N30C@b) 
+10'. |M036+1(N30D)|#? , n 1(N39B) 1(N30C) 
+@reverse 
+@column 1 
+1. [...] , 2(N39B) 1(N30C) 1(N30D) 1(N39B@b) [...] 
+
+
+&P008443 = MDP 17, 245 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M153# , 8(N14) 1(N01)# 
+$ n lines broken 
+2'. M136~n , 8(N14) 1(N01) 
+$ n lines broken 
+3'. M059 , 8(N14) 
+@reverse 
+$ broken ? 
+
+
+&P008486 = MDP 17, 288 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157#? , 
+# header 
+2. M136~c#? M354 , 2(N14) 1(N14@b) 
+3. M111~m M354 , 1(N14) 1(N39B) 
+4. M111~m M354 , 1(N14) 1(N39B) 
+5. M054~i M340# , 5(N01) 
+6. x x , 3(N01) 
+7. M354 , 5(N01) 
+8. M384~f M054~i#? , 2(N01) 
+9. [...] , 2(N01) 
+10. x M354# , 2(N01) 
+11. x , 1(N01)# 
+@reverse 
+@column 1 
+1. [...] M354# , 1(N14) 
+2. |M304+M041~g|# M354 , 1(N14) 1(N39B) 
+3. M247~b x , 5(N1@b) 
+4. M297 , 1(N39B) 
+@top 
+1. 1(N34) 
+
+
+&P008510 = MDP 17, 312 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. M384 [...] , [...] 
+$ n lines broken 
+3'. [...] M206~d , 1(N14) 5(N01) 
+$ rest broken 
+@reverse 
+@column 1 
+1. M288#? , 2(N14) 
+
+
+&P008533 = MDP 17, 335 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , [...] 1(N39B)# 
+2'. M379 , 1(N24) 
+3'. M050~k#? , [...] 
+$ n lines broken 
+4'. |M175+M136|# M266~b M263 , 2(N01) 
+5'. M124 M377 [...] , [...] 
+$ n lines broken 
+6'. [...] , 1(N30C) 
+7'. M124 M024 M242~b#? M096 M288 , [...] 
+8'. x x , 2(N39B) 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] M288#? , n(N01)#? 
+
+
+&P008536 = MDP 17, 338 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M342~i? , 
+# header 
+2. M136~o M288#? , [...] 
+$ n lines broken 
+3'. [...] , n 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] , 3(N39B) 
+2. M387#? M354#? , 2(N39B) 1(N24) 
+3. M346? , 1(N24) 
+
+
+&P008537 = MDP 17, 339 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] M081 M387~l x M376# , [...] 
+$ n lines broken 
+2'. [...] M376 , 1(N01) 
+3'. M054~b x [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] M376# , 1(N01) 
+2'. M388 x , 4(N14)# 
+$ n lines broken 
+3'. [...] M136~a x M376 , [...] 
+
+
+&P008543 = MDP 17, 345 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] M009 M318~a2 M371 M321 , 1(N01)# [...] 
+$ n lines broken 
+2'. [...] M371 M376 , 5(N01) 
+3'. M509 x [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , 2(N01)# 
+2'. x [...] , [...] 
+$ n lines broken 
+3'. [...] M376 , 2(N01) 
+4'. M099 M136#? [...] , [...] 
+$ n lines broken 
+5'. x x x , [...] 
+$ rest broken 
+
+
+&P008604 = MDP 17, 406 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M195# , 
+# header 
+2. M136~i M077 M243~b M288# , 1(N01) 
+3. M387~l#? , [...] 
+$ rest broken 
+@reverse 
+$ broken 
+$ seal 1 
+# seal 1 = PES0110 
+
+
+&P008625 = MDP 17, 427 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 3(N14) 
+2'. M207~e , 1(N14) 
+3'. M136~e [...] , [...] 
+$ n lines broken 
+4'. [...] , [...] 2(N01)# 
+$ seal 1 
+# seal 1 = PES0098 
+@reverse 
+$ blank 
+# seal 1 
+# seal 1 = PES0098 
+
+
+&P008630 = MDP 17, 432 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. M136~i , 6(N01) 
+2'. |M157+M367|# , 1(N14) 
+$ n lines broken 
+3'. [...] , 4(N01)# 
+4'. x , 5(N01) 
+5'. M444 , 1(N01) 
+$ rest broken 
+@reverse 
+@column 1 
+1. x , 5(N14) 2(N01) 
+
+
+&P008633 = MDP 17, 435 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. M136~u M314# M388 M032 M102~k1 [...] , [...] 
+$ n lines broken 
+2'. [...] M348# , 3(N14) 
+3'. |M377+M320+M377|# M348# , 2(N14) [...] 
+$ n lines broken 
+4'. [...] , 3(N14) 
+5'. M057 , 3(N14) 
+6'. M338~b? M009 M371 [...] , [...] 
+$ n lines broken 
+7'. M445 , 7(N14) 
+8'. M316~a , 6(N14) 
+$ n lines broken 
+9'. [...] , 1(N45) 3(N14) 
+10'. M248 M388# [...] , [...] 
+$ n lines broken 
+11'. [...] , 3(N14) 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , [...] 3(N14)# 
+2'. M388 M320#? M035 x , 6(N14) 
+$ n lines broken 
+3'. [...] x M352~n M387~a M122 M371# , 1(N45) 6(N14) 
+$ n lines broken 
+4'. [...] , 7(N14) 
+@column 2 
+1. [...] , 2(N14)# 
+
+
+&P008650 = MDP 17, 452 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M195 , 
+# header 
+2. M136# , 
+3. x , 4(N01)# 
+$ n lines broken 
+4'. M387~l#? 
+#tr.en: (subscript) 
+$ (scribal design 1 = SDxxx?) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008657 = MDP 17, 459 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1. x x , 1(N01)# 
+$ n lines broken 
+2'. [...] M136 M038~b2 , 2(N01) 
+3'. M382~g , 4(N01)# 
+$ rest broken 
+@reverse 
+$ broken 
+
+
+&P008664 = MDP 17, 466 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 1(N14)# 7(N01) 
+2'. |M136+M195~d|# , 1(N14)# 
+$ n lines broken 
+3'. [...] , 6(N01) 
+4'. M383~c , 1(N14) 5(N01) 
+5'. M054~b , 1(N14) 
+$ n lines broken 
+6'. [...] , 2(N01) 
+7'. M365 , 3(N01) 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008670 = MDP 17, 472 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. M346 , 4(N14)# [...] 
+$ n lines broken 
+2'. M136~a , 6(N01)# [...] 
+$ rest broken 
+@reverse 
+$ broken 
+
+
+&P008680 = MDP 17, 482 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. x , 2(N01)# 
+$ n lines broken 
+2'. |M136+M365| M367 , 1(N14) 1(N01)# 
+$ n lines broken 
+3'. x , 2(N01) 
+4'. M383~a#? [...] , [...] 
+$ rest broken 
+@reverse 
+$ broken 
+
+
+&P008690 = MDP 26, 002 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. M038~e M034 M264~a1 , 1(N01)# 
+$ n lines broken 
+3'. |M036+1(N24)|? , 2(N01) 
+4'. M324~d# [...] , [...] 
+$ n lines broken 
+5'. [...] M379~c , 1(N30C) 
+6'. x M136~b M264~a1 , 1(N01) 
+7'. M263# [...] , [...] 
+$ n lines broken 
+8'. x x , 2(N01) 
+9'. M263 , 2(N01) 
+10'. M354 , 2(N14) 
+11'. x [...] , [...] 
+$ n lines broken 
+12'. [...] x M136~c M388 M377~e M347 M371 [...] , [...] 
+$ n lines broken 
+13'. [...] x M354 , 2(N01) 
+14'. M387~l x [...] , [...] 
+@reverse 
+$ broken? 
+
+
+&P008736 = MDP 26, 048 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M327+X| , 
+# header 
+2. x x , 4(N48) 7(N34)# 1(N45) 2(N14) 2(N1@b)# [...] 
+3. [...] , 2(N34) 2(N45) 4(N14) 
+4. M059# , 7(N34) 1(N45) 4(N14) 5(N01) 1(N39B) 
+5. M365 , [...] 
+6. [...] , [...] 2(N45)# 4(N14) 
+7. [...] , 4(N14) 3(N01) 2(N39B) 
+8. M010~6#? , 1(N45) 1(N01) 
+9. [...] , 2(N34) 3(N45) 1(N01) 2(N39B) 1(N24) 
+10. [...] M136~r , 6(N34) [...] 
+11. [...] , [...] 2(N01) 2(N39B) 1(N24) 1(N45@b) 7(N14@b) 2(N39B@b) 
+12. M145~b? , 1(N45) 1(N01) 
+13. M010~6? , 1(N14) 3(N01) 
+14. [...] , 2(N45) 2(N14) 4(N1@b) 1(N39B@b) 1(N24@b) 
+@reverse 
+@column 1 
+1. x , 4(N34) 2(N45) 9(N14) 1(N01) 2(N39B) 
+2. 9(N34@b) 1(N45@b) 2(N14@b)# 4(N1@b)# 4(N39B@b) 
+3. M288 , 1(N46) 3(N48) 5(N34)# 
+
+
+&P008759 = MDP 26, 071 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M327# , 
+# header 
+2. M317~a M038~bx M147~b |M136+M365| M317 , 1(N01) 
+3. M417~d# , 1(N01)# 
+4. [...] |M136+M365| |M317+X| , 1(N01) 
+5. M210 M153 M370~b , 1(N01) 
+6. M205~c |M054+M365+M054~i| M003~b , 1(N01) 
+7. M365 x , [...] 
+8. |M153+M205~c| M105~a# , 1(N01) 
+9. M325 M038~bx , 1(N01) 
+10. |M136+M365| M041 , 1(N01) 
+11. M054~c |M175+M288| , 1(N01) 
+12. M054~c M417~d , 1(N01) 
+13. |M136+M365| , 1(N01) 
+14. M136~h M203~c , 1(N01) 
+15. M059 M054~c x , 1(N01)# 
+16. M175# |M136+M365| , 1(N01) 
+17. |M136+M365|#? M029 , 1(N01) 
+18. M054 M266~b M305# , 1(N01) 
+19. M059 x , 1(N01)# 
+20. M340# M054 , 1(N01) 
+21. M126# M417~e , 1(N01) 
+22. M357# M054 , 1(N01) 
+23. M468 |M054+M365+M054~i| , 1(N01) 
+24. M252# M131~k , 1(N01) 
+25. |M136+M365| M001 , 1(N01) 
+26. x , 1(N01) 
+27. M382~a M009 , 2(N01) 
+28. M387~l x , 2(N01) 
+29. M203~c , 1(N01) 
+30. |M153+M205~c|? , 1(N01) 
+31. M387~l , 1(N01) 
+32. M387~l M054 M001 , 1(N01) 
+33. x x , 1(N01) 
+34. M325 M054# , 1(N01) 
+35. M176 M131~k , 1(N01) 
+36. M252#? , 1(N01) 
+37. [...] , 1(N01) 
+38. M384 M003~b , 1(N01) 
+39. |M136+M365| M376 , 1(N01) 
+40. M136~b x , 1(N01) 
+41. M175 , 2(N14) 1(N01) 
+42. M123#? |M054+M365+M054~i| , 1(N01) 
+43. M136~b M041 , 1(N01) 
+44. M051~a , 1(N01) 
+45. M205~c |M305+M153| , 1(N01) 
+46. M075~g , 1(N01) 
+47. M125# M417~f , 1(N01) 
+48. M157 M469 , 1(N01) 
+49. x M341? , 1(N01) 
+50. |M175+M153| |M054+M365+M054~i| , 1(N01) 
+51. M470 M101 , 1(N01) 
+52. x M102~e M341 , 1(N01) 
+53. M157~a M314 , 2(N01) 
+54. M470 x , 1(N01) 
+55. |M175+M153| , 1(N01) 
+56. x M341 , 1(N01) 
+57. x M305 , 1(N01) 
+58. |M175+M038~a| , 1(N01) 
+59. M365 , 1(N01) 
+60. M051~a M003~b , 1(N01) 
+61. |M136+M365| M131~k , 1(N01) 
+62. M314 M003~b , 1(N01) 
+63. x M054 , 1(N01) 
+64. M205~c M318~a1 , 1(N01) 
+65. M340 M054 , 1(N01) 
+66. M059# M111~a# , 1(N01) 
+67. M136~b M001 , 1(N01) 
+68. M210~g M153 , 1(N01) 
+69. M124# M341 , 1(N01) 
+70. M124# M376 , 1(N01) 
+71. M157 , 1(N01) 
+72. |M175+M038~a| M029~i#? , 2(N01) 
+73. M325~d , 1(N01) 
+74. [...] , [...] 
+75. [...] , 1(N01) 
+76. M325#? M005 , 1(N01) 
+77. x M124 , 1(N01) 
+78. M384~d M054 M001 , 1(N01) 
+79. M006 M158~c , 1(N01) 
+80. M136~b# M105~a , 1(N01) 
+81. M175 , 1(N01) 
+82. M175 M341 , 1(N01) 
+83. x , [...] 
+84. [...] , [...] 
+85. M417~f , 1(N01) 
+86. M126 M001 M124# , 1(N01) 
+87. M384 |M175+M153|#? , 1(N01) 
+88. M286 M001 , 1(N01) 
+89. x M124 M417~f , 1(N01) 
+90. [...] , [...] 
+91. M124# M112 , 1(N01) 
+92. M059? M041 , 1(N01) 
+93. M327# , 1(N01) 
+94. M210~m |M136+M365|# , 1(N01) 
+95. M147~d 
+#tr.en: (subscript) 
+@reverse 
+@column 1 
+1. M317 , 1(N34) 5(N14) 9(N01) 
+
+
+&P008760 = MDP 26, 072 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~i , 
+# header 
+2. |M304+M304| M278~b , 1(N01) 
+3. M269~b , 5(N01) 
+4. M354 , 5(N14) 
+5. M157~a M278~b , 1(N01) 
+6. M354 , 3(N14)# 
+7. x , 2(N01) 4(N39B) 1(N24) 1(N30C) 
+@reverse 
+@column 1 
+1. M136~i , [...] 
+
+
+&P008761 = MDP 26, 073 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~h , 
+# header 
+2. M056~f , 2(N14) 2(N01) 
+3. M387 M056~f , 1(N14) 4(N01) 
+4. M288 , 2(N14) 2(N01) 2(N39B) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008762 = MDP 26, 074 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~t , 
+# header 
+2. M157~a# M288# , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] , 2(N14) 3(N01) 
+@top 
+1. 2(N01) 
+
+
+&P008763 = MDP 26, 075 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+X| , 
+# header 
+2. M297~b , 6(N14)# 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008764 = MDP 26, 076 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x |M136+X| , 
+2. M056~f , 1(N34) 3(N14) 3(N01) 
+3. M288 , 6(N14) 1(N01) 1(N39B) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008765 = MDP 26, 077 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. M388 M262! x x , [...] 
+$ n lines broken 
+3'. [...] M417~h#? , 8(N01) 
+4'. M341# [...] , [...] 
+$ n lines broken 
+5'. [...] M348 , 5(N14) 
+6'. M059 [...] , [...] 
+$ n lines broken 
+7'. [...] , 1(N01) 
+8'. M158~d x [...] , [...] 
+$ n lines broken 
+9'. [...] M101 x [...] , [...] 
+$ n lines broken 
+10'. [...] M024 M417~h#? [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1. [...] , 1(N14) 3(N01) 
+2. x , 1(N01) 
+3. x 
+
+
+&P008766 = MDP 26, 078 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. M387 M056~f , 1(N34) 5(N14) 6(N01) 
+3. M288 , 7(N14) 4(N01) 3(N39B) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008767 = MDP 26, 079 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~t# , 
+# header 
+2. M041 M318~h , 2(N01) 
+3. M059 , 2(N01)# 
+4. x , 2(N01) 
+5. M054~c , 2(N01) 
+6. M357 , 2(N01) 
+7. M240~d , 2(N01) 
+@reverse 
+@column 1 
+1. M318~h , 1(N14) 2(N01) 
+
+
+&P008768 = MDP 26, 080 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~r# , 2(N51) [...] 
+$ n lines broken 
+2'. [...] M348 , 2(N51) 
+$ n lines broken 
+3'. [...] M327~p , 1(N51) 
+$ n lines broken 
+4'. [...] M278#? , 5(N01) 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008769 = MDP 26, 081 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M304# , 
+# header 
+2. M286# , 2(N14)# 
+3. M136~m#? M319# 
+@reverse 
+$ blank 
+$ seal 1 
+# seal 1 = PESxxxx 
+
+
+&P008773 = MDP 26, 085 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M305 , 
+# header 
+2. x M302~j , 1(N34) 
+3. M059 , [...] 
+4. M209~d1 x , 2(N14) 
+5. M051~a , 3(N14) 2(N01)# 
+6. M209~d1 x , 6(N01) 
+7. M145# M124 , 1(N01) 
+8. x , [...] 
+9. |M136+X| x , 2(N14) 
+10. x , 2(N14) 
+@reverse 
+@column 1 
+1. [...] , 3(N14) 8(N01) 
+@top 
+1. 1(N34)? 
+
+
+&P008776 = MDP 26, 088 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M305+M136| , 
+# header 
+2. M039~b x M195 M346 , 2(N01)# 
+3. M003~b M367 , 2(N01)# 
+4. M075~h# x , 2(N01) 
+5. M122~4 M346 , 1(N14) 
+6. M367 , 1(N14) 
+7. x , 1(N01) 
+8. M383 M001 M320 , 1(N01) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008778 = MDP 26, 090 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M305+M136| , 
+# header 
+2. M346 , 3(N14) 2(N01)# 
+$ n lines broken 
+3'. [...] , 1(N14) 4(N01) 
+4'. M367~c , 2(N01) 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008779 = MDP 26, 091 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M305 , 
+# header 
+2. |M136+M365| M346#? , 1(N14)? 2(N01) 
+3. x , [...] 
+4. M361~a M032 , 1(N01) 
+5. M203~c M001 M004? , 2(N01) 
+6. M125 M376 , [...] 
+@reverse 
+$ blank 
+
+
+&P008781 = MDP 26, 093 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M041~f , 
+# header 
+2. |M305+M136| , [...] 
+$ n lines broken 
+3'. M260? , [...] 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008785 = MDP 26, 097 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M377 , 
+# header 
+2. M346 M365 , 1(N14) [...] 2(N01) 
+3. M365? [...] , [...] 
+$ n lines broken 
+4'. M105~a#? , 2(N01) 
+5'. M111~o#? , 2(N01) 
+6'. M145 , 1(N01) 
+7'. M136~c , 2(N01)# 
+$ n lines broken 
+8'. [...] , 2(N01)# 
+9'. M373 M373 , 1(N01) 
+10'. [...] , 2(N01) 
+11'. x , [...] 
+$ n lines broken 
+12'. x , 2(N01) 
+13'. M373 , 1(N01) 
+14'. M001 , 1(N01) 
+15'. M124 M009 , 1(N01) 
+$ n lines broken 
+16'. M305 M124 , 2(N14) 2(N01) 
+17'. |M305+M365| x [...] , [...] 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008788 = MDP 26, 100 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M387~l , 
+# header 
+2.a. M157~a M362 , 9(N01)# 
+2.b. [M367] , [...] 
+2.c. [M269~a] , [...] 
+2.d. [M269~2] , [...] 
+2.e. [M106] , [...] 
+2.f. [M009] , [...] 
+2.g. M292~f! , 1(N14) 3(N01) 
+2.h. M102~d , 1(N14) 8(N01)# 
+2.i. [M341~q] , [...] 
+3.a. [x M362] , [...] 
+3.b. [M367] , [...] 
+3.c. [M269~a] , [...] 
+3.d. M269~2 , 1(N01) 
+3.e. M106 , 2(N01) 4(N39B) 1(N24) 
+3.f. M009 , 4(N01) 
+3.g. [M292~f] , [...] 
+3.h. [M102~d] , [...] 
+3.i. [M341~q] , [...] 
+4.a. [x M362] , [...] 
+4.b. [M367] , 8(N14) 8(N01) 
+4.c. M269~a , 1(N14) 3(N01) 
+4.d. M269~2 , [...] 
+4.e. [M106] , [...] 
+4.f. [M009] , [...] 
+4.g. [M292~f] , [...] 
+4.h. [M102~d] , [...] 
+4.i. [M341~q] , [...] 
+5.a. M365 M362 , 1(N14) 8(N01) 
+5.b. M367 , 1(N23) 2(N14) 2(N01) 
+5.c. [M269~a] , [...] 
+5.d. [M269~2] , [...] 
+5.e. [M106] , [...] 
+5.f. [M009] , [...] 
+5.g. [M292~f] , [...] 
+5.h. M102~d , 4(N14) 6(N01) 
+5.i. M341~q , 1(N14) 8(N01) 
+6.a. |M136+M365| [M362] , [...] 
+6.b. [M367] , [...] 
+6.c. [M269~a] , [...] 
+6.d. [M269~2] , [...] 
+6.e. [M106] , [...] 
+6.f. M009 , 1(N14) 6(N01) 
+6.g. x? , 3(N01)#? 
+6.h. x? , 3(N14) 2(N01) 
+6.i. M341~q , [...] 
+7.a. [x M362] , [...] 
+7.b. [M367] , [...] 
+7.c. [M269~a] , [...] 
+7.d. [M269~2] , [...] 
+7.e. [M106] , 1(N39B) 1(N24) 
+7.f. M009 , 8(N01) 
+7.g. M260#? , 8(N01) 
+7.h. M102~d , 1(N14) 
+7.i. [M341~q] , [...] 
+8.a. [x M362] , [...] 
+8.b. [M367] , [...] 
+8.c. [M269~a] , [...] 
+8.d. [M269~2] , [...] 
+8.e. [M106] , [...] 
+8.f. [M009] , [...] 
+8.g. [M292~f] , 2(N01)# 
+8.h. M102~d , 4(N01) 
+8.i. M341~q# , 2(N01) 
+9.a. M383~e M362# , 2(N01)# 
+9.b. [M367] , [...] 
+9.c. [M269~a] , [...] 
+9.d. [M269~2] , [...] 
+9.e. [M106] , [...] 
+9.f. [M009] , [...] 
+9.g. [M292~f] , [...] 
+9.h. [M102~d] , [...] 
+9.i. [M341~q] , [...] 
+10.a. [x M362] , [...] 1(N01) 
+10.b. M367 , 1(N14) 5(N01) 
+10.c. M269~a# , 1(N01)# 
+10.d. [M269~2] , [...] 
+10.e. [M106] , [...] 
+10.f. [M009] , [...] 
+10.g. [M292~f] , [...] 
+10.h. [M102~d] , [...] 
+10.i. [M341~q] , [...] 
+11.a. [x M362] , [...] 
+11.b. [M367] , [...] 
+11.c. [M269~a] , [...] 
+11.d. [M269~2] , [...] 
+11.e. M106 , 1(N01) 1(N39B) 1(N24) 
+11.f. M009# , [...] 
+11.g. [M292~f] , [...] 
+11.h. [M102~d] , [...] 
+11.i. [M341~q] , [...] 
+12.a. [x M362] , [...] 
+12.b. [M367] , [...] 
+12.c. [M269~a] , [...] 
+12.d. M269~2 , 1(N01) 
+12.e. M106# , 2(N39B) 
+12.f. [M009] , [...] 
+12.g. [M292~f] , [...] 
+12.h. [M102~d] , [...] 
+12.i. [M341~q] , [...] 
+@reverse 
+@column 1 
+1. [...] , 1(N14) 5(N01) 
+2. M111~h , 6(N14) 1(N01) 2(N39B) 1(N24) 
+3. [...] , 2(N34) 4(N14) 8(N01) 
+
+&P008794 = MDP 26, 106 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M305+M136| , 
+# header 
+2. M056~f , 2(N45) 
+@reverse 
+@column 1 
+1. M305#? , [...] 
+2. [...] , 1(N45) 2(N14) 
+3. x 
+#tr.en: (subscript) 
+
+
+&P008803 = MDP 26, 115 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 
+# header 
+2. M157# M010~2 M056~f , 3(N14) 
+3. |M136+M365| , 1(N14) 5(N01) 
+4. x M471 , 5(N01) 1(N14) 
+@reverse 
+@column 1 
+1. M056~f x , 4(N14)# 4(N01)# 
+
+
+&P008806 = MDP 26, 118 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M387+M387| , 
+# header 
+2. M056~f , 2(N45) 
+3. M384 , 3(N14) 
+4. M195 , 3(N14) 
+5. x , 3(N14) 
+6. M136~i# , 6(N14) 
+7. x , 1(N14) 
+8. M286~a , 1(N14) 
+9. M305# , 3(N14) 
+@reverse 
+@column 1 
+1. M056~f , 1(N34) 1(N45) 
+
+
+&P008838 = MDP 26, 150 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M341 , 
+# header 
+2. x , 1(N14) 2(N01) 
+3. M339 M293~b , 1(N39B) 
+4. M136~i , 1(N01) 
+5. M209~a , 2(N39B) 1(N24) 2(N30D) 
+6. x , 1(N39B) 1(N24) 1(N30C) 
+7. x , 1(N01) 
+8. M006 , 1(N14) 2(N01) 
+9. x , 4(N01) 
+10. M054# M305#? , 3(N01) 
+11. x x x , 2(N39B) 
+12. x , 2(N39B) 1(N24) 1(N30C) 
+13. x , 2(N39B) 1(N24) 
+14. x , 1(N39B) 
+@reverse 
+@column 1 
+1. x M293~b , 4(N14) 4(N01) 3(N39B) 1(N24) 2(N30C) 
+
+
+&P008839 = MDP 26, 151 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M341 , 
+# header 
+2. M006 , 1(N01) 
+3. M365 , 1(N01) 
+4. M210~c , 1(N01) 
+5. x M136~c , 1(N01) 
+6. M328~b , 1(N01) 
+7. M001 , 9(N01) 
+8. M001 , 4(N01) 
+9. M447~b M001 , 1(N01) 
+10. M136~c , 1(N01) 
+@reverse 
+@column 1 
+1. x , 6(N01) 
+2. M001 , 1(N14) 6(N01) 
+
+
+&P008844 = MDP 26, 156 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 1(N51) 4(N23) 5(N14) 6(N01) 
+2. M288 , 4(N34) 1(N14) 2(N01) 
+3. M059 M454~b# , 9(N23) 7(N14) 3(N01) 
+4. M288 , 2(N34) 2(N45) 1(N14) 2(N39B) 1(N24) 
+5. M136~f M054 , 1(N23) 2(N01) 
+6. M288 , 8(N14) 3(N01) 
+@reverse 
+@column 1 
+1. M054# , 2(N51) 5(N23)# 3(N14) 1(N01) 
+2. M288 , 7(N34) 5(N01) 2(N39B) 1(N24) 
+
+
+&P008851 = MDP 26, 163 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M059 , 
+# header 
+2. M297~c , 3(N01) 1(N39B) 
+3. x , 1(N01) 3(N39B) 
+4. [...] , 1(N01) 4(N39B) 
+5. M382~a? , 1(N01) 1(N39B) 
+6. M136~a , 2(N01) 1(N39B) 
+7. M075~e , 1(N01) 3(N39B) 
+8. x , 3(N39B) 
+@reverse 
+@column 1 
+1. M297~c , 2(N14) 1(N01) 2(N39B) 
+
+
+&P008876 = MDP 26, 188 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M348 , 
+# header 
+2. M056~f M288 , 2(N14) 4(N01)# 3(N39B)# 
+3. |M136+X| , 2(N14) 
+@reverse 
+@column 1 
+1. [...] , 4(N01) 3(N39B) 
+
+
+&P008881 = MDP 26, 193 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M447~c , 
+# header 
+2. M387# M346 , 1(N01) 
+3. M054# |M136+X| M001 , 1(N01) 
+4. M153# , 1(N01)# 
+5. M346 , 2(N01) 
+6. M081 , 8(N01) 
+7. |M136+X| , 2(N01) 
+8. M382~e M038~bx , 2(N01) 
+9. x x x M447~c M346 , 2(N14) 
+10. x , 2(N01) 
+11. M346 , [...] 
+@reverse 
+@column 1 
+1. [...] , 2(N14) 5(N01) 
+2. M009 , 2(N01)# 
+3. [...] , 1(N14) 6(N01) 
+
+
+&P008904 = MDP 26, 216 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. x M001 , 3(N01) 
+2'. x , 3(N01) 
+$ n lines broken 
+3'. x M001# |M351+1(N14)|# , 2(N01) 
+4'. x x , 4(N01) 
+5'. |M136+X| M387 M346# , [...] 
+$ n lines broken 
+6'. [...] , 5(N01) 
+7'. M387 M006 , 5(N01) 
+8'. M387 M346 , 6(N01) 
+9'. M387 M346 , 4(N01) 
+$ n lines broken 
+10'. [...] M346 , 7(N01) 
+11'. M387 M346 , 7(N01) 
+12'. x M346 , 4(N01) 
+13'. x , 1(N01) 
+14'. M367~c , [...] 
+$ n lines broken 
+15'. [...] x , 6(N01) 
+16'. x , 1(N14) 5(N01) 
+17'. M057 , 4(N01) 
+$ n lines broken 
+18'. [...] , 2(N01) 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , 7(N01) 
+2'. |M136+X| , 6(N14) 4(N01) 
+$ n lines broken 
+3'. [...] , 1(N14) 7(N01) 
+$ n lines broken 
+4'. M387 M081? M346 , 1(N23) 7(N01)# 
+
+
+&P008908 = MDP 26, 220 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 
+2. M059 M054 , 2(N23) 6(N14) 8(N01) 
+3. M288 , 2(N45) 2(N14) 2(N01) 
+4. |M175+M286| M054 , 1(N23) 3(N14) 2(N01) 
+5. M288 , 1(N45) 1(N14) 
+6. M136~f M054 , 1(N23) 1(N14) 8(N01) 
+7. M288 , 9(N14) 5(N01) 
+
+
+&P008910 = MDP 26, 222 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. x , 1(N01) 2(N39B) 
+3. x M009# M059 , 3(N01)# 
+4. [...] , 2(N01)# 3(N39B) 
+5. |M106+M288?|# , 2(N01) 4(N39B) 
+6. M062 , 2(N01) 2(N39B) 
+7. M075~e , 2(N01) 1(N39B) 
+8. M136~b , 2(N01) 3(N39B) 
+9. M203~c , 4(N01) 
+@reverse 
+@column 1 
+1. x , 4(N14) 5(N01) 2(N39B) n 
+
+
+&P008916 = MDP 26, 228 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. x , 6(N34) 
+$ n lines broken 
+2'. [...] , 2(N34)# 
+3'. [...] , 1(N45)# 
+$ n lines broken 
+4'. x , 1(N45) 
+5'. M039~a , 1(N45) 8(N14) 4(N01) 2(N39B) 
+$ n lines broken 
+6'. [...] , 2(N45) 3(N14) 4(N01) 3(N39B) 1(N24) 
+7'. M356 , 6(N14) 4(N01) 
+$ n lines broken 
+8'. [...] , 7(N14) 4(N01) 2(N39B) 1(N24) 1(N30D)# 
+9'. M136~j , 4(N14) 1(N01) 
+10'. M039~f , 5(N14)# 
+$ n lines broken 
+11'. [...] , 4(N1@b) 2(N39B@b) 
+12'. M059 , 6(N14) 1(N01) 2(N39B) 
+13'. M054 , 1(N45) 2(N14) 4(N01) 
+$ n lines broken 
+14'. [...] , 1(N45)# 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P008922 = MDP 26, 234 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136# , 
+# header 
+2. x M354 , 5(N01) 
+3. M387 x , 1(N14) 
+4. M105~b , 1(N14) 
+5. M265~e , 1(N14) 
+6. M304# , 2(N01) 
+7. M391 M387 , 8(N01) 
+8. x , 3(N01) 
+9. M105~b , 6(N01) 
+@reverse 
+@column 1 
+1. M354 , 5(N14) 4(N01) 
+
+
+&P008955 = MDP 26, 267 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M305# , 
+# header 
+2. |M351+1(N14)|?# M288 , 3(N14) 
+3. M384~d M051~c x , 1(N14) 
+4. |M136+M365| , 1(N14) 
+5. M384~ab , 1(N14) 
+6. M157~a , 1(N14) 
+7. M327~p M056~f? M131? 
+#tr.en: (subscript) 
+@reverse 
+@column 1 
+1. M288# , 1(N45) [1(N14)?] 
+
+
+&P008961 = MDP 26, 273 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 1(N01) 
+2'. M383~e , 1(N01) 
+3'. x , [...] 
+$ n lines broken 
+4'. M075~g , 1(N01) 
+5'. M365~c , 1(N01) 
+6'. M327~p# , [...] 
+$ n lines broken 
+7'. [...] , 1(N14) 
+8'. |M136+X| , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , 6(N01) 
+2'. |M136+X| , 1(N01)# 
+
+
+&P008968 = MDP 26, 280 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 2(N14) 2(N01) 
+2'. M367 , 3(N14)# 3(N01)# 
+3'. |M136+M365| , [...] 
+$ n lines broken 
+4'. [...] , 3(N01) 
+5'. M003~b? , 5(N01) 
+6'. M387 , 4(N01)# 
+$ n lines broken 
+7'. M003~b? , 5(N01) 
+$ n lines broken 
+8'. [...] , 4(N01) 
+9'. M147 M054 , [...] 
+$ n lines broken 
+10'. [...] , 1(N01) 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , 6(N01) 
+2'. M387#? , 2(N23) 3(N14) 4(N01) 
+
+
+&P008991 = MDP 26, 303 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. |M305+M136| , 5(N01) 
+3. M264~d1#? , 2(N01) 
+4. M036# , 2(N51) 3(N01) 
+5. x , 1(N24) 2(N30D) 
+6. M106~a , 1(N30D) 
+7. x , 1(N30C) 
+8. x M297~d , 3(N39B) 
+9. x , 3(N39B) 
+10. x , 1(N30C) 1(N30D) 
+11. M111~f M297~b , 1(N39B) 1(N30D) 
+12. x M206~b? M297~b , 1(N39B) 2(N30D) 
+13. M072 , 2(N01) 
+14. M387 |M305+M136| M003~b# M296# M387 , 1(N39B) 
+15. x , 1(N30D) 
+16. x , n 1(N30D) 
+17. M387 M297~b , 1(N39B) 1(N24) 1(N30D) 
+18. M106~a , 1(N30D) 
+19. x , 1(N30D) 
+20. M387 M296# , [...] 
+21. M387 M296# , [...] 
+22. x , 1(N34) 1(N14) 
+23. [...] , 4(N14) 1(N39B) 1(N24) 
+@reverse 
+$ broken? 
+
+
+&P008993 = MDP 26, 305 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. |M305+M136|# M264~d1 , 2(N01) 
+3. M297~b , 2(N01)# 
+4. x x , 2(N39B) 1(N24) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P008995 = MDP 26, 307 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157~a , 
+# header 
+2. |M305+M136| M264~d1 , [...] 
+$ n lines broken 
+3'. x , 2(N30C) 1(N30D) 
+4'. x M293~b# , [...] 
+$ n lines broken 
+5'. M341 M269~b , 2(N01) 
+6'. M293~b# , 1(N39B) 
+$ n lines broken 
+7'. M051~a M219 , 1(N39B) 
+8'. M387 M288 , 2(N39B) 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P009004 = MDP 26, 316 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157~a , 
+# header 
+2'. |M136+X| M305 M036# , [...] 
+$ n lines broken 
+3'. M175# M260~1 , 1(N01) 
+4'. |M036+1(N30D)| , 2(N01) 
+5'. M111~b# , [...] 
+$ n lines broken 
+6'. [...] , 2(N01) 
+7'. M103~1 |M036+1(N30D)| , 5(N01)# 
+$ rest broken 
+@reverse 
+$ beginning broken 
+1'. [...] , 2(N30C) 1(N30D) 
+
+
+&P009027 = MDP 26, 339 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M327# , 
+# header 
+2. x , 4(N48) 
+3. [...] , 1(N34) 8(N14) 
+4. x , 1(N34) 
+5. M365 , 6(N34) 3(N45) 6(N14) [...] 1(N01)# 
+6. M075~ff , 6(N34) 4(N14) 
+7. |M136+M365| , 3(N34) 3(N14) 3(N01) 1(N39B) 
+8. M001 , 1(N34) 2(N14) 2(N01) 
+9. x x , 2(N45) 1(N14) 4(N01) 
+10. M059 , 5(N34) 1(N39B)# 
+11. x x , 1(N14) 2(N01) 
+12. x x , 3(N14) 1(N01) 
+@reverse 
+$ broken ? 
+
+
+&P009042 = MDP 26, 354 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. M228 , 2(N45) 4(N14) 5(N01) 
+3. M223 , 1(N14) 1(N01) 
+4. M376 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P009043 = MDP 26, 355 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 
+2. |M305+X|? M009 , 4(N01) 
+3. M376 , 7(N01) 1(N08A) 
+4. |M136+M365| , [...] 
+5. M149~a2 , 2(N01) 
+6. M376 , 2(N01) 1(N08A) 
+7. M102~a , 6(N01) 
+8. M159# M104 M269 , 3(N01) 
+9. M269 , 1(N01) 
+10. M269~1 , 1(N01) 
+11. M112~b M387 , 2(N39B) 2(N30C) 
+12. M292 , 1(N14) 5(N01) 
+13. M246~o , 1(N14) 1(N01) 
+14. M102~a , 2(N14) 2(N01) 
+15. M208 M376 , 4(N01) 1(N08A) 
+16. M359 M009 , 2(N01) 
+17. M220 
+@reverse 
+@column 1 
+1. [...] , 6(N01) 
+2. M376 , 1(N14) 6(N01) 1(N08A) 
+3. M149~a2 , 1(N01) 
+4. |M136+X| x , [...] 
+5. x , 1(N01) 
+6. M112~b , 1(N01) 2(N39B) 2(N30C) 
+7. M292 , 1(N14) 4(N01) 
+8. M246~o , 1(N14) 1(N01) 
+9. M102~a , 2(N14) 8(N01) 
+10. x 
+
+
+&P009077 = MDP 26, 389 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~a , 
+# header 
+2. [...] , 1(N14) 
+3. M218# , 1(N14) 
+4. M210 , 1(N14) 
+5. M054 , 1(N14) 
+6. M365 , [...] 
+7. M381#? , 1(N01) 
+8. M341 , 1(N14) 
+9. M006 , 1(N14) 
+10. x , 1(N14) 
+11. M387 M136~h , 1(N14) 
+12. M059 , 1(N14) 
+13. x , 4(N01) 
+14. x , [...] 
+15. M006 , 2(N14) 
+16. x , 5(N01) 
+17. x , 1(N14) 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] , 1(N45) 9(N14) 3(N01)# 
+
+
+&P009087 = MDP 26, 399 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M030~e? , 
+# header 
+2. M059 , 1(N14) 3(N01) 
+3. M015 , 2(N01) 
+4. M054 , 1(N14) 3(N01) 
+5. M010~5 , 1(N01) 
+6. M384 , 3(N14) 3(N01) 
+7. |M175+M136| , 2(N01) 
+8. M188~e M043 , 3(N14) 
+@reverse 
+@column 1 
+1. M175# |M136+X| , 1(N14) 
+2. M044 M010~3 , 2(N01) 
+
+
+&P009130 = MDP 26, 442 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M059 , 3(N14) 
+2. M220 , 2(N14) 3(N01) 
+3. |M136+X| , 4(N14) 3(N01) 
+4. M210~g , 4(N14) 3(N01) 
+5. M054 , 1(N14) 2(N01) 
+6. x , 2(N14) 3(N01) 
+7. x , 1(N14) 3(N01) 
+8. M009 , 1(N14) 3(N01) 
+9. M243 , 3(N01) 
+10. M219 , 1(N14) 3(N01) 
+11. M151~d , 1(N14) 3(N01) 
+@reverse 
+@column 1 
+1. M289 , 2(N45) 6(N01) 
+
+
+&P009153 = MDP 26, 465 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M054# , 
+# header 
+2. M094~e , 2(N01) 1(N08B) 
+3. M210 M193 , 1(N01) 
+4. [...] , 1(N01) 
+5. M210~g , 1(N01) 
+6. [...] , 1(N01) 
+7. |M136+M365| , [...] 
+8. M136~l x , 1(N01) 
+9. M387~h#? , 1(N01) 
+10. M134~a , 3(N01) 
+11. M383~h , 1(N01) 
+12. x , 1(N01) 
+13. M210 x , 1(N01) 
+14. M059 M003~b , 1(N01) 
+15. M147 M003~b , 1(N01) 
+16. x M277 , 3(N01) 
+17. x , 1(N01) 
+18. M383~e M387~h , 1(N01) 
+19. |M136+M365|#? x , 2(N01) 
+20. M107~a M277~ha , 4(N01) 
+21. x , 5(N01) 
+22. [...] , 1(N01) 
+23. M107~a , 1(N01) 
+24. x M003~b , 1(N01) 
+25. [...] , 1(N01) 
+26. M323# , 1(N01) 
+27. M341 x , 1(N01) 
+28. x M003~b , 1(N01) 
+29. x , 1(N01) 
+30. M136~r# , [...] 
+@reverse 
+$ broken ? 
+
+
+&P009178 = MDP 26S, 0259 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 2(N14)# 1(N39B) 
+2'. M304# M002 , 2(N14) 
+3'. x , [...] 
+$ n lines broken 
+4'. x , 2(N01)# 
+5'. M049~m# M372 M010# , 2(N01) 
+6'. M230 M009 M314 M377~e M218 , 2(N01) 
+$ n lines broken 
+7'. [...] x M057 |M305+M136| M056~f M288 , 2(N14) 
+8'. M057# x , 3(N14) 
+9'. x , [...] 
+$ n lines broken 
+10'. [...] x |M218+M101|# M371 , 1(N14) 3(N01) 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P009203 = MDP 26S, 4765 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. M482# , 3(N14) 
+3. M103 M277~g |M136+M365| [...] , [...] 
+4. [...] M388 |M036+1(N30D)| , 2(N14@b) 
+5. M482 , 1(N14) 
+6. M131~k M136~g [...] , [...] 
+7. [...] , [...] n(n@b) 
+8. M482# , 1(N14) 
+9. M302~b |M136+M365| |M036+1(N30D)| , 1(N14@b) 
+10. M388 [...] , [...] 
+@reverse 
+@column 1 
+1. |M036+1(N30D)| , 1(N34@b) 3(N14@b) 1(N01@b)# 
+2. [M482?] , 1(N34) 
+3. M297~b , 2(N39B) 1(N24) 
+
+
+&P009206 = MDP 26S, 4768 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157~a , 
+# header 
+2. M387~i M387~i M054 , 5(N01)# 
+$ n lines broken 
+3'. [...] , 5(N01) 
+4. |M305+M136~c| M354 , 1(N14)#? [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] , [...] 1(N30C) 1(N30D) 1(N39C) 
+@top 
+1. 1(N34) 
+
+
+&P009227 = MDP 26S, 4790 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157~a# , 
+# header 
+2. M305# x , 1(N14) 
+3. M096# M112 M136~c M263~b1 , 1(N01) 
+4. M305# [...] M260 , 1(N01) 
+5. |M036+1(N30D)|# , 5(N01) 
+6. M111~b M388 [...] , [...] 
+7. |M036+1(N30D)|# , 5(N01) 
+8. x [...] , [...] 
+9. |M036+1(N30D)|# , 5(N01) 
+10. [...] , [...] 
+11. x |M036+1(N30D)|# , 1(N01)#? 
+12. x , 1(N01)# 
+@reverse 
+@column 1 
+1. M297 , 1(N01) 2(N39B) 2(N30C) 1(N30D) 1(N39C) 
+@top 
+1. 1(N34) 
+
+
+&P009243 = MDP 26S, 4836 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 2(N01) 2(N30C) 1(N30D) 
+2'. M136~c M317~a x M288# , 2(N01)# 
+$ rest broken 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P009245 = MDP 26S, 4838 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] |M175+M288|# M324~d M261~d1 , [...] 
+$ n lines broken 
+2'. [...] |M305+M136|# M261~d1 , 1(N14) 1(N01) 
+3'. x M263# , [...] 
+$ n lines broken 
+4'. [...] x , 1(N01) 
+5'. x M263 , 1(N01)# 
+6'. |M175+M388|# [...] , [...] 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P009283 = MDP 26S, 5040 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 1(N01)# 
+2'. M146 M371#? [...] , [...] 
+$ n lines broken 
+3'. [...] M393~f# M054 M317 , 7(N01)# 
+$ n lines broken 
+4'. [...] M371#? M317 , 1(N14) 1(N01) 
+5'. M054 , 2(N14) 4(N01) 
+$ n lines broken 
+6'. [...] , 1(N14) 3(N01) 
+7'. x x , [...] 
+$ n lines broken 
+8'. [...] M136~n# M388#? [...] , [...] 
+$ rest broken 
+@reverse 
+$ broken ? 
+
+
+&P009317 = MDP 26S, 5217 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 1(N01) 
+2'. M338~c# M024# M371# M010# , [...] 
+$ n lines broken 
+3'. [...] , 4(N14)# 2(N01) 
+4'. M136~c#? , 2(N01)# 
+$ n lines broken 
+5'. [...] M371 M010# , 4(N01) 
+6'. M388 [...] , [...] 
+$ n lines broken 
+7'. [...] , 3(N01) 
+8'. M180 [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] , 4(N14)# 3(N01) 2(N39B) 
+$ rest broken 
+
+
+&P009356 = MDP 31, 016
+@obverse
+1. [...] ,
+2. [...] x M066 |M351+1(N14)| M228~ga M263# [...] , [...]
+3. [...] , [...]
+4. [...] M228~ga# , 1(N01)
+5. M124#? x [...] , [...]
+6. [...] , [...]
+7. [...] M004#? |M131+M388|# M101# M066 M263# , 1(N14)#
+8. x x [...] , [...]
+$ n lines broken
+9'. [...] , 5(N01)#
+10'. x M004# [...] , [...]
+$ n lines broken
+11'. [...] , 7(N01)
+12'. M124#? M218#? M096#? M387~a M218 M263 , [...]
+$ n lines broken
+13'. [...] , n(N01)
+14'. x x x [...] , [...]
+$ rest broken
+@reverse
+@column 1
+1. x M259# |M218+M288| M066 M228~ga#? , 1(N01)
+2. M263# , 5(N01)
+3. x x x [...] , [...]
+4. [...] , [...] 1(N01)
+5. M387~a M371 x M386~a M066#? M263 , 2(N01) 1(N24)
+6. M004 |M131+M388| M101 M066# M263# , [...]
+7. |M136~x+M153| M263~a , 2(N01)
+8. x M281~c M094 M263 , 1(N01)
+9. M386~a x x M281~c#? x M228~g , 2(N01)
+10. M263 , 5(N01)
+11. M029~b M128~de M096 M072~a M004 M263 , 1(N14) 2(N01)
+12. M228~g , 2(N01)
+@column 2
+1. [...] , [...] 1(N34)
+2. M228~ga , 2(N14) [...]
+3. M072~a#? M004 , 2(N14)# 8(N01)
+4. M319#
+
+&P009359 = MDP 31, 019 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M059 , 1(N14) 
+2. M252~i# , 4(N01) 
+3. M136~k , 1(N14) 
+4. M210~b , 1(N14) 
+5. [...] , 1(N14) 
+6. x , 1(N14) 
+7. M147 , 1(N14) 
+@reverse 
+@column 1 
+1. [...] , 6(N14) 4(N01) 
+$ seal 1 
+# seal 1 = PES0821 
+
+
+&P009376 = MDP 31, 037 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M377~e+M320+M377~e|# , 
+# header 
+2. M157 M388 M218 M329~b M388 M066 M136# M259? M388 M218 M314 M297 M206~d , 1(N01) 
+4. M352~o! M338~b M066 , 1(N01) 
+5. M365~g M218 , 1(N01) 
+6. M263 M318# M371 , 1(N01) 
+7. M001#? M066#? M217~j M352~o M218~b M388 M338~b M009# M371 , 2(N01)# 
+8. M377~e# M347 M371#? M388 M377~e M040 M372 M365~g x , 1(N01) 
+@reverse 
+@column 1 
+1. M325~d M388 M218 M220 |M218+M288|? M066 , 1(N01)#? 
+10. x M295~e? M218 , 1(N01)# 
+@column 2 
+1. [...] , 9(N01)? 
+
+
+&P009378 = MDP 31, 039 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M327# , 
+# header 
+2. |M297~b+M388| , 2(N01) 
+3. x , [...] 
+$ n lines broken 
+4'. M290~d M365~d , 1(N01) 
+5'. x , 1(N14) 
+6'. x , [...] 
+$ n lines broken 
+7'. M349# , 2(N34) 
+8'. |M136+M353| , [...] 
+$ rest broken 
+@reverse 
+$ broken ? 
+$ seal 1 
+# seal 1 = PES0972 
+@top 
+1. 2(N01) 
+
+
+&P009402 = CahDAFI 1, 43 01 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. [...] , 2(N01) 
+3. x , 2(N01)# 
+4. [...] , 1(N01)# 
+5. M131~e? , 2(N14) 
+6. M136~w , 1(N01)# 
+7. x , 3(N01)# 
+8. x , [...] 
+@reverse 
+$ broken 
+
+
+&P009404 = CahDAFI 1, 43 03 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~i , 
+# header 
+$ broken 
+@reverse 
+$ broken 
+
+
+&P009456 = UM 73-08-002 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M361~a |M136+M365|# , [...] 
+@reverse 
+@column 1 
+1. [...] , 7(N01) 
+2. M247~m , 4(N14) 
+
+
+&P009459 = M-0632 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x , 
+2. |M136+M365|# , 1(N45) 3(N34) 6(N14) 2(N01) 
+3. M351~d# 1(N45) 2(N14) 3(N01)# 
+4. M348 x , 1(N45) 2(N01) 
+5. x , 3(N01) 
+6. M057 , 3(N14) 9(N01) 
+7. M206~b#? 4(N14)# 5(N01) 1(N08A) 
+8. x , 7(N34) 6(N01) 1(n) 
+9. x , 2(N01)# 
+10. M383 , 2(N01) 
+11. M072# x x , 5(N34) 
+@reverse 
+@column 1 
+1. M041~j# M348 M351~d M348 x , 4(N34) 3(N01) 
+
+
+&P009460 = M-1000 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~p , 
+# header 
+2. M327 M005 M003~b M388 x , [...] 
+3. x M288 , 5(N01) 
+4. x M365 , 1(N01) 
+5. M054 , [...] 
+6. [...] , 4(N01)# 
+@reverse 
+@column 1 
+1. [...] , 1(N14) 6(N01) 
+
+
+&P009466 = M-1155 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. x x , 
+2. M388 x M248~c M096#? , 1(N14) 8(N01) 
+3. M222 x x , 7(N01) 
+4. M387 M066# x [x] M263 M218 , 7(N01) 
+5. x M388 M057~b# [...] M325 , 1(N14) 3(N01)# 
+6. M388 |M218+X| x x x M096 , 2(N14) 2(N01) 
+7. M038~f#? M146#? [...] M110~a M242~b# M096 , 5(N01) 
+8. |M136+M365| M388 M029~a [...] , [...] 
+9. [...] x M377~e M054# M388 M218 M219 M029~a , [...] 
+10. x , [...] 
+@reverse 
+@column 1 
+1. [...] x , 1(N14) 3(N01)# 
+@column 2 
+1. M388 , 1(N23) 1(N14) [...] 
+
+
+&P009525 = Yahya 01 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~q 
+# header 
+2. M056# , 2(N01) 
+3. M044 , 4(N1@b) 3(N39B@b) 1(N24@b) 1(N30C) 
+4. M044 M368~a , 3(N39B) 2(N30C) 
+5. M219 , 1(N14) 1(N01) 4(N39B) 
+6. M044 M076~e , 1(N01) 4(N39B) 1(N24) 1(N30C) 1(N30D) 
+7. [...] , 2(N39B) 
+@reverse 
+@column 1 
+1. M044 M056 , 2(N14) 5(N01)# 2(N39B) 1(N24) 1(N30C) 1(N30D) 
+ 
+
+&P009527 = Yahya 03 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~q , 
+# header 
+2. M056 , 5(N1B) 
+3. M012 , 3(N01) 
+4. M219 , 5(N01) 3(N39B) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P009528 = Yahya 04 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~q , 
+# header 
+2. M056 , 1(N24) 2(N30C) 1(N30D) 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P009531 = Yahya 07 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+M365| , 
+# header 
+2. 9(N14@b) , 2(N01@b) 3(N39B@b) 
+3. M219 , 2(N14)# 5(N01) 2(N39B) 
+4. , 8(N14) 4(N01) 
+@reverse 
+1. , [2(N45)] 1(N14)# 
+$ blank space 
+&P009533 = Yahya 09 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~q# 
+# header 
+2. [...] , [...] 
+@reverse 
+$ blank space 
+# sic? 
+
+
+&P009535 = Yahya 11 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M209~c , 
+# header 
+2. |M136+M071~a| M388 |M296+M296| M072# M346 , 2(N14) 7(N01)# 
+3. M388# x x M346 , 5(N01) 
+4. M388 M218 M219 M346 , 3(N14) 2(N01)# 
+5. x M346 , 1(N14) 
+6. M388 M054 M387 M391 M346 , 8(N01) 
+7. M388 M490 M365#? , [...] 
+8. M054# x M149~c M346 , 2(N01) 
+9. M388 x x M346 , 2(N01)# 
+10. M263~1# x M346 , 3(N01) 
+11. M388 M206~b M371 M346 , 7(N01) 
+12. M388 M285~m M346 , 4(N01)# 
+13. M388 M491 M218 M346 , 2(N01) 
+14. M388 M304 M096~2 M346 , 6(N01) 
+15. M388 M003 M026~a M346# , 6(N01) 
+16. M388 M072 M371 M346 , 6(N01) 
+17. M388# M124 M097~f? M346 , 1(N14) 
+18. M388 M124 M314 M066~h M346 , 1(N14) 2(N01) 
+
+&P009538 = Yahya 14 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~q , 
+# header 
+2. M059 M297 M387~a , 1(N24) 
+3. 1(N24@b) 
+4. x , [...] 
+5. M054 M288 , 1(N01) 
+6. M387~a M001 , 1(N01) 
+7. M081 M297 , 1(N24) 
+8. M305 , 2(N30C) 1(N30D) 
+9. M387~c , 1(N30D) 
+10. x M003~b , 1(N30D) 
+11. M207~m , 2(N30C) 
+12. M207~m , 1(N30C) 
+13. M381~e , 1(N30C) 
+14. M059 M297 , 1(N30C) 1(N30D) 
+15. M001 , 2(N30C@b) 
+16. M054 , 1(N30C) 
+17. M072 , 1(N30C) 
+18. M207~m# , 1(N39C) 
+
+
+&P009543 = Yahya 19 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+X| , 
+# header 
+2. M056 , 1(N14) 4(N01) 
+@reverse 
+@column 1 
+1. M044 M056 , 1(N14) 3(N01) 
+
+
+&P009546 = Yahya 22 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M136+X| , 
+# header 
+2. M051~c , 1(N30C) 1(N30D) 
+3. M266~b? , 1(N30C) 
+
+
+&P009547 = Yahya 23 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~q# , 
+# header 
+2. M288 , 2(N14) 5(N01) 3(N39B) 
+3. 1(N14B) 
+
+
+&P272825 = MDP 06, 5242 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+2. [...] , 3(N01)# 
+3. x M143 M001~b M302~b? M288# , 3(N14) 3(N01) 
+4. M371~a M144 , 3(N01) 
+5. M206~b , 1(N01) 4(N39B) 1(N24) 
+6. M038~bx M374~c M032# , 2(N45) 4(N14) 
+7. M317~e#? M136#? [...] , [...] 
+8. [...] , [...] 3(N39B)# 
+9. x M342 M374~c x , 3(N14)#? 2(N01) 4(N39B) 1(N24) 2(N30C) 1(N30D) 
+10. x , 3(N01) 
+11. M281~f , 2(N01) 
+12. x , 2(N01) 
+13. x , 2(N01) 
+14. x , 2(N01) 
+15. x , 2(N01) 
+16. M383~c? M001 , 2(N14) 1(N39B) 1(N24) 2(N30C) 
+17. |M305+M387~c| x M305# , 1(N14) 1(N01) 
+18. M305 x x M262#? M347 M371 , 2(N39B) 1(N24) 
+19. M029~b x M097~h M318# M371 , 1(N01) 2(N39B) 1(N24) 1(N30C) 
+20. M352~n#? M388 M128~d M386~a M297~d M288#? , 1(N01) 1(N39B) 1(N24) 2(N30C) 
+21. M285~c , 1(N01) 3(N39B) 1(N24) 2(N30C) 1(N30D) 
+22. x x x , 4(N39B) 1(N24) 2(N30C) 
+23. x M305 M388 x x x x , 1(N24) 2(N30C) 
+24. x M388 M009 M004 M218# , 2(N01) 2(N39B) 
+25. |M305+X| M388 M032 x , 4(N01) 1(N39B) 1(N30C)#? 
+26. M009~a M388 M131 M218 , 2(N39B) 2(N30C) 
+27. x M305 M387 M064~a M320 , 2(N39B) 1(N24) 
+28. M175 |M305+M009|? M305#? M388 x M240 M096~d? [...] x M266~b? , 2(N39B) 1(N24) 1(N30C) 
+29. x x M219 M305 M388 M254~a x x , 1(N01) 4(N39B) 1(N24) 
+30. M038~bx M367 [...] M305 , 3(N39B) 1(N24) 1(N30D) 
+31. M317#? x M305 M066 x , 1(N24) 2(N30C) 
+32. |M136+X| M305 M388 x M352~n#? M097~h , 1(N24) 2(N30C) 
+33. x M105~a x x , 2(N39B) 1(N24) 
+34. x M388 x x x x , 2(N39B) 1(N24) 
+35. M105~a x M026~h x , 1(N01) 1(N24) 2(N30C) 
+36. M210~g M305 M388 M146#? M097~h M004 M218 , 1(N01) 4(N39B) 1(N24) 2(N30C) 
+37. M377 M377 [...] M035#? x , 2(N39B)#? 1(N24)#? 
+38. x x , 3(N14) 2(N01) 2(N39B) 2(N30C)#? 
+39. x? M305#? M388 M009 x M371 , 1(N39B) 1(N24) 2(N30C) 
+40. x? M038~bx , 1(N24) 2(N30C) 
+41. x x , 1(N39B) 1(N24) 1(N30C) 
+42. x M305#? M057 M240 , 1(N39B) 2(N30C) 
+43. x x [...] M024 [...] x x M057#? M288#? 6(N14) 4(N01) 2(N39B) 1(N24)? 1(N30C)#? 
+44. x x [...] M218#? , 1(N39B) 1(N30C) 
+45. M387# M388 M291 M358 , 1(N14) 2(N01) 1(N24) 
+46. M009~a x , 1(N45) 5(N01) 1(N30C) 
+47. M305 M254~a x x , 2(N01)# 3(N39B) 1(N24) 2(N30C)# 1(N30D) 
+48. x x x M004 M218 , 3(N01) 
+49. M217 M288 , 1(N14) 1(N01) 
+50. [...] , [...] 2(N39B) 1(N24) 2(N30C) 1(N30D) 
+51. M001 M038~bx M387~ca M387 , 3(N39B) 1(N24) 
+52. M001~b M320 M305#? , 1(N24) 2(N30C) 1(N30D) 
+53. M033#? x , 2(N39B) 1(N24) 1(N30D) 
+54. M175#? M048~e , 1(N14) 5(N01) 4(N39B) 
+55. M051~b M048~c# , 3(N01)#? 1(N24) 1(N30C) 1(N30D) 
+56. x x , 3(N01) 2(N39B) 
+57. M387~ca M340? M054 , 1(N45) 5(N14) 2(N01)#? 2(N39B) 1(N24) 2(N30C) 1(N39C) 
+58. M387~ca M297~b , 2(N14) 4(N01) 4(N39B)# 
+59. x x M328~b x M388#? M387 x , 2(N01)#? 2(N39B) 
+60. x , 3(N01) 4(N39B) 1(N30D)#? 1(N39C)#? 
+61. M122 , 5(N14) 1(N24) 1(N30C) 1(N30D) 1(N39C) 
+62. M387~c M387~c , 4(N14) 5(N01) 1(N39B) 1(N24) 1(N39C) 
+63. M387~hb? M387~hb? , 4(N01) 2(N39B) 1(N24) 1(N30D) 
+64. M351~m? , 1(N39B) 2(N30C) 
+65. M175#? 3(N01) 4(N39B) 
+66. x x , 3(N39B) 1(N24) 
+67. |M351+1(N14)| x , 1(N29B) 1(N24) 2(N30C)# 
+68. x 2(N39B) 1(N24) 1(N30C) 
+69. M387~c |M175+X| M209~d x , 1(N24) 
+70. x M305 M388 M263~1 x , 3(N39B) 1(N24) 2(N30C) 1(N30D) 
+71. x x x x , [...] 3(N39B) 1(N30C) 
+72. x M305#? , 4(N01) 2(N30C) 
+73. [...] , 4(N14) 3(N39B) 2(N30C) 1(N30D) 
+74. M377 M123~b , 1(N01) 
+75. M124 M228~d? , 1(N39B) 2(N30C) 
+76. x x , 4(N01)# 1(N24) 1(N30D) 
+77. x x x , 3(N39B) 
+78. x x , 1(N24) 
+79. x x x x M131#? M218#? , 1(N24) 
+80. x M346 M305 M131#? x , 1(N39B) 1(N24) 
+81. x , 1(N01) 2(N39B) 
+82. x x x , 3(N01)#? 
+83. |M305+M009| M038~bx M346 M136# , 2(N14) 3(N01) 2(N39B) 1(N24) 
+84. |M305+M342| x M136# x x x , 3(N39B) 2(N30C) 
+85. x M247~g#? x x M243#? , 3(N14)# 
+86. [...] , 5(N01)# 
+87. x x [...] , [...] 2(N14) 2(N01) 
+88. M324~d x M318#? M371#? M149# M217# , 1(N01) 
+89. M383 M209~d x x , 3(N39B) 
+90. x M209~d M254~a#? M096 , 3(N01) 
+91. x M066 M105~a#? M218#? , 2(N14) 3(N39B) 1(N24) 1(N30D)#? 
+92. x M105~a M144#? x , 1(N01) 4(N39B) 1(N24) 1(N30D)#? 
+93. [...] , 1(N01) 1(N24)# 1(N30C)# 
+94. [...] , [...] 
+95. [...] M218 , [...] 
+96. M377 M377# [...] x x , 4(N01) 3(N39B) 1(N30C) 
+97. M136#? x , 2(N01)#? 1(N39B) 1(N30C)? 
+98. [...] , [...] 4(N39B) 
+99. x x M371 , 3(N01) 
+100. M247~f [...] , [...] 
+101. [...] M057 [...] , 3(N01)# 1(N39B) 
+102. [...] , [...] 
+103. [...] x M387~c# M388#? , 5(N01) 2(N39B)# [...] 
+104. [...] M247~f , 1(N39B) 2(N30C) 1(N30D) 
+105. M252~q#? [...] x x , 3(N01)# 1(N39B) 
+106. x x , 3(N39B)# 1(N24) 1(N30C) 
+107. [...] , [...] 
+@reverse 
+@column 1 
+1. [...] , 1(N14) 4(N01) 
+2. M250~n M346 x , 5(N01) 
+3. |M327+M059| [...] , [...] 
+$ blank space 
+# seal impression 
+$ blank space 
+# seal impression 
+@column 2 
+1. [...] , [...] 3(N01)# 
+2. M288 , 6(N34) 2(N45) 1(N14) 1(N01) 4(N39B) 1(N30D) 
+3. M136# M377 M377 M297~b , 1(N34) 2(N45) 9(N14) 2(N01) 
+@seal 1 
+1. M136 
+2. M136 
+$ (= PES0330) 
+
+&P272827 = MDP 06, 5000 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M157 , 
+# header 
+2. x M297#? , 2(N14) 
+3. M038~e , 1(N01) 1(N39B) 
+4. M305~i x [...] , [...] 1(N24) 1(N30C) 
+5. M286# M297~b 1(N01) 2(N39B) 1(N24)#? 2(N30C) 1(N30D) 
+6. M102~da# M004 M218 , 1(N14) 3(N01) 
+7. M006 x , 1(N14) 
+8. x M136~c , 2(N01) 
+9. |M317+X| , 1(N14)# [...] 
+@reverse 
+@column 1 
+1. M297#? , 7(N14) 5(N01)# [...] 
+
+
+&P368482 = PETF 1, 005 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M377~e+M320+M377~e|# , 
+#tr.en: (header) 
+2. x [x] , 7(N14) 
+3. M316~e1 , 4(N14)# 
+4. M136~u#? , 5(N14) 
+5. x , 1(N34) 
+6. M377 M377 M388# M146 M371 , 6(N14) 
+7. M301~a M250~bc M218 , 3(N14) 
+@reverse 
+@column 1 
+1. [...] , [...] 6(N14)# 
+
+
+&P368489 = PETF 1, 012 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. |M327+M342|#? |M136+M365|# [...] , [...] 
+$ n lines broken 
+2'. [...] x M096# M206~d#? , 1(N01) 
+3'. x [...] , [...] 
+$ n lines broken 
+4'. [...] , 1(N01) 
+5'. M250~ba#? M143 M066# , 1(N01) 
+6'. M218 M263# M096# [...] , [...] 
+$ n lines broken 
+7'. [...] M218 , 1(N01) 
+8'. x x M096# , 1(N01) 
+9'. M220#? x [...] , [...] 
+@reverse 
+$ broken 
+
+
+&P368543 = PETF 1, 066 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] x , 1(N01) 
+2'. M136~a? , 6(N01)# 
+$ n lines broken 
+3'. [...] , 2(N01)# 
+@reverse 
+@column 1 
+1. [...] , 1(N14) 9(N01)# 
+
+
+&P368549 = PETF 1, 072 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] , 5(N01)# 
+2'. M136~k? , 4(N01) 
+@reverse 
+@column 1 
+1. , 7(N14) 2(N01)# 
+
+
+&P368556 = PETF 1, 079 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. [...] , 
+$ n lines broken 
+2'. [...] x M136~o# M317 , 4(N01)# 
+$ n lines broken 
+3'. [...] M521 M096 M317 , 4(N01)# 
+$ rest broken 
+@reverse 
+@column 1 
+$ broken 
+
+
+&P368579 = PETF 1, 098 
+#atf: lang qpc 
+@tablet 
+@obverse 
+1. M136~c , 
+#tr.en: (header) 
+2. x [...] , [...] 
+$ rest broken 
+@reverse 
+@column 1 
+1. [...] , [...] 3(N01@b) 
+
+
+&P368601 = PETF 1, 118 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. [...] M001#? M305# M388# M218# x [...] , [...] 
+$ n lines broken 
+2'. [...] M305 M388 M218 |M218+M101|# [...] , [...] 
+$ n lines broken 
+3'. [...] x M218 , 1(N24) 2(N30C) 
+$ n lines broken 
+4'. [...] , 2(N30C)# 
+5'. M388# , 1(N01)#? 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] , [...] 1(N30C)# 
+$ n lines broken 
+2'. [...] , [...] 2(N30C)# 1(N30D)# 
+$ n lines broken 
+3'. [...] , [...] 1(N30C)# 1(N30D) 
+4'. M136~c# M218#? , 1(N30C)# [...] 
+$ n lines broken 
+5'. x x , [...] 
+$ rest broken 
+
+
+&P368604 = PETF 1, 120 
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+1'. M158#? x M218# M035# M004 M218 , 1(N01)# 
+$ n lines broken 
+2'. [...] M136~b# |M157+X| , 3(N14)# 1(N01)# 1(N39B)# [...] 
+$ n lines broken 
+3'. [...] x , 1(N01)# 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. [...] x x 
+$ n lines broken 
+2'. [...] M009 , 2(N14)# 2(N01)# 1(N39B)#? [...] 
+$ n lines broken 
+3'. [...] , [...] 2(N30C)# 
+4'. M175# [...] , [...] 
+$ rest broken 
+
